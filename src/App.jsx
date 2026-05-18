@@ -120,16 +120,15 @@ const [searchTerm, setSearchTerm] = useState("");
 const [theme, setTheme] = useState("light");
 const [showScript, setShowScript] = useState(false);
 
+const [showPasteCsv, setShowPasteCsv] = useState(false);
+const [pastedCsv, setPastedCsv] = useState("");
+
 useEffect(() => {
   localStorage.setItem("bookoraLeads", JSON.stringify(leads));
 }, [leads]);
 
-function handleCsvUpload(event) {
-  const file = event.target.files[0];
-
-  if (!file) return;
-
-  Papa.parse(file, {
+function importLeadsFromCsvText(csvText) {
+  Papa.parse(csvText, {
     header: true,
     skipEmptyLines: true,
     complete: (results) => {
@@ -164,10 +163,23 @@ function handleCsvUpload(event) {
 
         return [...currentLeads, ...newLeadsOnly];
       });
-
-      event.target.value = "";
     },
   });
+}
+
+function handleCsvUpload(event) {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = (uploadEvent) => {
+    importLeadsFromCsvText(uploadEvent.target.result);
+    event.target.value = "";
+  };
+
+  reader.readAsText(file);
 }
 
 function updateLead(id, field, value) {
@@ -296,6 +308,10 @@ function resetSampleLeads() {
   Upload Manus CSV
   <input type="file" accept=".csv" onChange={handleCsvUpload} />
 </label>
+
+<button className="pasteButton" onClick={() => setShowPasteCsv(true)}>
+  Paste CSV
+</button>
 
   <button className="scriptButton" onClick={() => setShowScript(true)}>
     View Call Script
@@ -427,6 +443,58 @@ function resetSampleLeads() {
           </article>
         ))}
             </main>
+
+            {showPasteCsv && (
+  <div className="scriptOverlay">
+    <div className="scriptModal">
+      <div className="scriptHeader">
+        <div>
+          <p className="eyebrow darkEyebrow">Bookora CSV Import</p>
+          <h2>Paste Manus CSV</h2>
+        </div>
+
+        <button
+          className="closeScript"
+          onClick={() => setShowPasteCsv(false)}
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="scriptSection">
+        <p>
+          Paste the full CSV from Manus below. Make sure the first row includes
+          the correct headers like businessName, phone, website, googleRating,
+          reviewCount, and so on.
+        </p>
+
+        <textarea
+          className="csvPasteBox"
+          value={pastedCsv}
+          onChange={(event) => setPastedCsv(event.target.value)}
+          placeholder="Paste CSV here..."
+        />
+
+        <div className="csvPasteActions">
+          <button
+            className="callButton"
+            onClick={() => {
+              importLeadsFromCsvText(pastedCsv);
+              setPastedCsv("");
+              setShowPasteCsv(false);
+            }}
+          >
+            Import Leads
+          </button>
+
+          <button className="siteButton" onClick={() => setPastedCsv("")}>
+            Clear Text
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
       {showScript && (
         <div className="scriptOverlay">
