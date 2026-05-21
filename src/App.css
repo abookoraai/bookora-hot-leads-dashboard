@@ -124,6 +124,40 @@ h1 {
   box-shadow: 0 10px 24px var(--shadow);
 }
 
+.summaryHot {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(127, 29, 29, 0.45));
+  border-color: rgba(239, 68, 68, 0.55);
+}
+
+.summaryWarm {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(124, 45, 18, 0.45));
+  border-color: rgba(249, 115, 22, 0.55);
+}
+
+.summaryMaybe {
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.25), rgba(113, 63, 18, 0.45));
+  border-color: rgba(234, 179, 8, 0.55);
+}
+
+.summaryTotal {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(20, 83, 45, 0.45));
+  border-color: rgba(34, 197, 94, 0.55);
+}
+
+.summaryHot p,
+.summaryWarm p,
+.summaryMaybe p,
+.summaryTotal p {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.summaryHot h3,
+.summaryWarm h3,
+.summaryMaybe h3,
+.summaryTotal h3 {
+  color: white;
+}
+
 .summaryCard p {
   margin: 0;
   color: var(--text-muted);
@@ -169,19 +203,48 @@ h1 {
 }
 
 .filterButtons button {
-  border: 1px solid var(--card-border);
-  background: var(--button-bg);
-  color: var(--button-text);
+  border: 1px solid transparent;
+  color: white;
   padding: 12px 16px;
   border-radius: 14px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
+  opacity: 0.82;
+}
+
+.filterButtons button:hover,
+.filterButtons button.active {
+  opacity: 1;
+  transform: translateY(-1px);
 }
 
 .filterButtons button.active {
-  background: #101828;
-  color: white;
-  border-color: #101828;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.allFilter {
+  background: #2563eb;
+  border-color: #60a5fa;
+}
+
+.hotFilter {
+  background: #dc2626;
+  border-color: #f87171;
+}
+
+.warmFilter {
+  background: #f97316;
+  border-color: #fdba74;
+}
+
+.maybeFilter {
+  background: #ca8a04;
+  border-color: #fde047;
+}
+
+.skipFilter {
+  background: #6b7280;
+  border-color: #9ca3af;
 }
 
 .leadGrid {
@@ -328,9 +391,16 @@ h1 {
 }
 
 .siteButton {
-  background: var(--button-bg);
-  color: var(--text-main);
-  border: 1px solid var(--card-border);
+  background: #16a34a;
+  color: white;
+  border: 1px solid #4ade80;
+  box-shadow: 0 12px 28px rgba(22, 163, 74, 0.22);
+}
+
+.siteButton:hover {
+  transform: translateY(-1px);
+  background: #15803d;
+  box-shadow: 0 16px 34px rgba(22, 163, 74, 0.32);
 }
 
 @media (max-width: 850px) {

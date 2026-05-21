@@ -315,26 +315,26 @@ return (
       </header>
 
       <section className="summaryGrid">
-        <div className="summaryCard">
-          <p>Hot Leads</p>
-          <h3>{summary.hot}</h3>
-        </div>
+  <div className="summaryCard summaryHot">
+    <p>Hot Leads</p>
+    <h3>{summary.hot}</h3>
+  </div>
 
-        <div className="summaryCard">
-          <p>Warm Leads</p>
-          <h3>{summary.warm}</h3>
-        </div>
+  <div className="summaryCard summaryWarm">
+    <p>Warm Leads</p>
+    <h3>{summary.warm}</h3>
+  </div>
 
-        <div className="summaryCard">
-          <p>Maybe</p>
-          <h3>{summary.maybe}</h3>
-        </div>
+  <div className="summaryCard summaryMaybe">
+    <p>Maybe</p>
+    <h3>{summary.maybe}</h3>
+  </div>
 
-        <div className="summaryCard">
-          <p>Total Leads</p>
-          <h3>{summary.total}</h3>
-        </div>
-      </section>
+  <div className="summaryCard summaryTotal">
+    <p>Total Leads</p>
+    <h3>{summary.total}</h3>
+  </div>
+</section>
 
       <section className="controls">
   <input
@@ -386,14 +386,14 @@ return (
 
   <div className="filterButtons">
           {["All", "Hot", "Warm", "Maybe", "Skip"].map((priority) => (
-            <button
-              key={priority}
-              onClick={() => setPriorityFilter(priority)}
-              className={priorityFilter === priority ? "active" : ""}
-            >
-              {priority}
-            </button>
-          ))}
+  <button
+    key={priority}
+    onClick={() => setPriorityFilter(priority)}
+    className={`${priorityFilter === priority ? "active" : ""} ${priority.toLowerCase()}Filter`}
+  >
+    {priority}
+  </button>
+))}
         </div>
 
         <div className="dangerActions">
