@@ -4,50 +4,54 @@ import "./App.css";
 
 const sampleLeads = [
   {
-  id: "sample-1",
-  businessName: "Glow Med Spa",
+    id: "sample-1",
+    businessName: "Glow Med Spa",
     phone: "(407) 555-0188",
     website: "https://example.com",
+    city: "Orlando",
+    county: "Orange",
+    state: "FL",
+    zipCode: "32801",
     googleRating: 4.8,
     reviewCount: 243,
-    hasMctb: "No",
-    websiteQuality: "Average",
-    onlineBooking: "Weak",
     serviceType: "Med Spa",
-    afterHoursResponse: "No text back",
+    locationType: "Individual",
     manusNotes:
-      "High review count, appointment-based, no obvious missed-call text back.",
+      "Established med spa with strong review count, appointment-based services, and likely enough volume to benefit from better lead follow-up.",
     status: "New",
   },
   {
-  id: "sample-2",
-  businessName: "Elite Auto Care",
-    phone: "(407) 555-0144",
+    id: "sample-2",
+    businessName: "Luxe Aesthetics",
+    phone: "(813) 555-0144",
     website: "https://example.com",
+    city: "Tampa",
+    county: "Hillsborough",
+    state: "FL",
+    zipCode: "33602",
     googleRating: 4.6,
     reviewCount: 128,
-    hasMctb: "Unknown",
-    websiteQuality: "Bad",
-    onlineBooking: "None",
-    serviceType: "Auto Service",
-    afterHoursResponse: "No answer",
-    manusNotes: "Auto repair shop with weak website and no clear online booking.",
+    serviceType: "Med Spa",
+    locationType: "Individual",
+    manusNotes:
+      "Good local med spa prospect with enough reviews to suggest steady demand and appointment volume.",
     status: "New",
   },
   {
-  id: "sample-3",
-  businessName: "Smile Studio Dental",
-    phone: "(407) 555-0199",
+    id: "sample-3",
+    businessName: "National Beauty Med Spa",
+    phone: "(305) 555-0199",
     website: "https://example.com",
-    googleRating: 4.3,
-    reviewCount: 61,
-    hasMctb: "Yes",
-    websiteQuality: "Good",
-    onlineBooking: "Strong",
-    serviceType: "Dental",
-    afterHoursResponse: "Answered",
+    city: "Miami",
+    county: "Miami-Dade",
+    state: "FL",
+    zipCode: "33101",
+    googleRating: 4.7,
+    reviewCount: 800,
+    serviceType: "Med Spa",
+    locationType: "Chain",
     manusNotes:
-      "Decent business, but already has strong booking and response systems.",
+      "Large multi-location brand. Skip for now because the current focus is individual locations.",
     status: "New",
   },
 ];
@@ -57,37 +61,47 @@ function calculateLeadScore(lead) {
 
   const rating = parseFloat(lead.googleRating || 0);
   const reviews = parseInt(lead.reviewCount || 0);
-  const hasMctb = String(lead.hasMctb || "").toLowerCase();
-  const websiteQuality = String(lead.websiteQuality || "").toLowerCase();
-  const onlineBooking = String(lead.onlineBooking || "").toLowerCase();
-  const afterHours = String(lead.afterHoursResponse || "").toLowerCase();
   const serviceType = String(lead.serviceType || "").toLowerCase();
+  const locationType = String(lead.locationType || "").toLowerCase();
+  const hasPhone = Boolean(lead.phone);
+  const hasWebsite = Boolean(lead.website);
 
-  if (hasMctb === "no") score += 25;
-  if (hasMctb === "unknown") score += 5;
+  // Only prioritize individual locations
+  if (locationType === "individual") score += 25;
+  else if (locationType === "chain") score -= 50;
+  else score += 5;
 
-  if (reviews >= 200) score += 20;
-  else if (reviews >= 100) score += 15;
-  else if (reviews >= 50) score += 10;
+  // Business size / demand based on review count
+  if (reviews >= 300) score += 30;
+  else if (reviews >= 150) score += 25;
+  else if (reviews >= 75) score += 18;
+  else if (reviews >= 40) score += 10;
+  else if (reviews >= 20) score += 5;
 
-  if (rating >= 4.7) score += 15;
-  else if (rating >= 4.4) score += 10;
-  else if (rating >= 4.0) score += 5;
+  // Rating quality
+  if (rating >= 4.7) score += 20;
+  else if (rating >= 4.4) score += 15;
+  else if (rating >= 4.0) score += 8;
 
-  if (websiteQuality === "bad") score += 15;
-  else if (websiteQuality === "average") score += 8;
+  // Med spa / appointment-heavy niche
+  if (
+    serviceType.includes("med spa") ||
+    serviceType.includes("aesthetic") ||
+    serviceType.includes("botox") ||
+    serviceType.includes("injectable") ||
+    serviceType.includes("laser") ||
+    serviceType.includes("facial") ||
+    serviceType.includes("weight loss") ||
+    serviceType.includes("body contouring")
+  ) {
+    score += 20;
+  }
 
-  if (onlineBooking === "none") score += 15;
-  else if (onlineBooking === "weak") score += 10;
+  // Basic contact quality
+  if (hasPhone) score += 10;
+  if (hasWebsite) score += 10;
 
-  if (afterHours.includes("no text")) score += 20;
-  else if (afterHours.includes("no answer")) score += 12;
-
-  if (serviceType.includes("med spa")) score += 10;
-  if (serviceType.includes("auto")) score += 8;
-  if (serviceType.includes("dental")) score += 8;
-
-  return Math.min(score, 100);
+  return Math.max(0, Math.min(score, 100));
 }
 
 function getLeadPriority(score) {
@@ -117,7 +131,10 @@ export default function App() {
 
 const [priorityFilter, setPriorityFilter] = useState("All");
 const [searchTerm, setSearchTerm] = useState("");
-const [theme, setTheme] = useState("light");
+const [cityFilter, setCityFilter] = useState("");
+const [countyFilter, setCountyFilter] = useState("");
+const [stateFilter, setStateFilter] = useState("FL");
+const [minReviewsFilter, setMinReviewsFilter] = useState("50");
 const [showScript, setShowScript] = useState(false);
 
 const [showPasteCsv, setShowPasteCsv] = useState(false);
@@ -133,23 +150,24 @@ function importLeadsFromCsvText(csvText) {
     skipEmptyLines: true,
     complete: (results) => {
       const cleanedLeads = results.data
-        .filter((lead) => lead.businessName && lead.phone)
-        .map((lead, index) => ({
-          id: lead.id || `${Date.now()}-${index}`,
-          businessName: lead.businessName || "",
-          phone: lead.phone || "",
-          website: lead.website || "",
-          googleRating: lead.googleRating || "0",
-          reviewCount: lead.reviewCount || "0",
-          hasMctb: lead.hasMctb || "Unknown",
-          websiteQuality: lead.websiteQuality || "Average",
-          onlineBooking: lead.onlineBooking || "Unknown",
-          serviceType: lead.serviceType || "Other",
-          afterHoursResponse: lead.afterHoursResponse || "Unknown",
-          manusNotes: lead.manusNotes || "",
-          callerNotes: lead.callerNotes || "",
-          status: lead.status || "New",
-        }));
+  .filter((lead) => lead.businessName && lead.phone)
+  .map((lead, index) => ({
+    id: lead.id || `${Date.now()}-${index}`,
+    businessName: lead.businessName || "",
+    phone: lead.phone || "",
+    website: lead.website || "",
+    city: lead.city || "",
+    county: lead.county || "",
+    state: lead.state || "",
+    zipCode: lead.zipCode || "",
+    googleRating: lead.googleRating || "0",
+    reviewCount: lead.reviewCount || "0",
+    serviceType: lead.serviceType || "Med Spa",
+    locationType: lead.locationType || "Unknown",
+    manusNotes: lead.manusNotes || "",
+    callerNotes: lead.callerNotes || "",
+    status: lead.status || "New",
+  }));
 
       setLeads((currentLeads) => {
         const existingPhones = new Set(
@@ -227,14 +245,43 @@ function resetSampleLeads() {
         const search = searchTerm.toLowerCase();
 
         const matchesSearch =
-          lead.businessName.toLowerCase().includes(search) ||
-          lead.serviceType.toLowerCase().includes(search) ||
-          lead.phone.toLowerCase().includes(search);
+  lead.businessName.toLowerCase().includes(search) ||
+  String(lead.serviceType || "").toLowerCase().includes(search) ||
+  String(lead.phone || "").toLowerCase().includes(search) ||
+  String(lead.city || "").toLowerCase().includes(search) ||
+  String(lead.county || "").toLowerCase().includes(search);
 
-        return matchesPriority && matchesSearch;
+const matchesCity =
+  !cityFilter ||
+  String(lead.city || "").toLowerCase().includes(cityFilter.toLowerCase());
+
+const matchesCounty =
+  !countyFilter ||
+  String(lead.county || "").toLowerCase().includes(countyFilter.toLowerCase());
+
+const matchesState =
+  !stateFilter ||
+  String(lead.state || "").toLowerCase() === stateFilter.toLowerCase();
+
+const matchesMinReviews =
+  !minReviewsFilter ||
+  Number(lead.reviewCount || 0) >= Number(minReviewsFilter);
+
+const isIndividualLocation =
+  String(lead.locationType || "").toLowerCase() === "individual";
+
+return (
+  matchesPriority &&
+  matchesSearch &&
+  matchesCity &&
+  matchesCounty &&
+  matchesState &&
+  matchesMinReviews &&
+  isIndividualLocation
+);
       })
       .sort((a, b) => b.leadScore - a.leadScore);
-  }, [leads, priorityFilter, searchTerm]);
+  }, [leads, priorityFilter, searchTerm, cityFilter, countyFilter, stateFilter, minReviewsFilter]);
 
   const summary = useMemo(() => {
     const scored = leads.map((lead) => getLeadPriority(calculateLeadScore(lead)));
@@ -248,24 +295,17 @@ function resetSampleLeads() {
   }, [leads]);
 
   return (
-    <div className={`app ${theme}`}>
+    <div className="app dark">
       <header className="hero">
         <div>
           <p className="eyebrow">Bookora</p>
           <h1>Hot Lead Dashboard</h1>
           <p className="subtitle">
-            Prioritize the businesses most likely to need missed-call text back,
-            AI receptionist, appointment reminders, and lead follow-up.
-          </p>
+  Prioritize individual med spas by size, review count, rating, and location so you can call the best prospects first.
+</p>
         </div>
 
         <div className="heroActions">
-  <button
-    className="themeToggle"
-    onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-  >
-    {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
-  </button>
 
   <div className="heroCard">
     <p>Call First</p>
@@ -303,6 +343,33 @@ function resetSampleLeads() {
     value={searchTerm}
     onChange={(event) => setSearchTerm(event.target.value)}
   />
+  <input
+  type="text"
+  placeholder="Filter by city..."
+  value={cityFilter}
+  onChange={(event) => setCityFilter(event.target.value)}
+/>
+
+<input
+  type="text"
+  placeholder="Filter by county..."
+  value={countyFilter}
+  onChange={(event) => setCountyFilter(event.target.value)}
+/>
+
+<input
+  type="text"
+  placeholder="State..."
+  value={stateFilter}
+  onChange={(event) => setStateFilter(event.target.value)}
+/>
+
+<input
+  type="number"
+  placeholder="Minimum reviews..."
+  value={minReviewsFilter}
+  onChange={(event) => setMinReviewsFilter(event.target.value)}
+/>
 
   <label className="uploadButton">
   Upload Manus CSV
@@ -364,25 +431,19 @@ function resetSampleLeads() {
             </div>
 
             <div className="details">
-              <p>
-                <span>Phone:</span> {lead.phone}
-              </p>
-              <p>
-                <span>Has MCTB:</span> {lead.hasMctb}
-              </p>
-              <p>
-                <span>Website Quality:</span> {lead.websiteQuality}
-              </p>
-              <p>
-                <span>Online Booking:</span> {lead.onlineBooking}
-              </p>
-              <p>
-                <span>After Hours:</span> {lead.afterHoursResponse}
-              </p>
-              <p>
-                <span>Status:</span> {lead.status}
-              </p>
-            </div>
+  <p>
+    <span>Phone:</span> {lead.phone}
+  </p>
+  <p>
+    <span>Location:</span> {lead.city}, {lead.county}, {lead.state} {lead.zipCode}
+  </p>
+  <p>
+    <span>Location Type:</span> {lead.locationType}
+  </p>
+  <p>
+    <span>Status:</span> {lead.status}
+  </p>
+</div>
 
             <div className="notes">
               <p className="smallLabel">Manus Notes</p>
@@ -463,9 +524,9 @@ function resetSampleLeads() {
 
       <div className="scriptSection">
         <p>
-          Paste the full CSV from Manus below. Make sure the first row includes
-          the correct headers like businessName, phone, website, googleRating,
-          reviewCount, and so on.
+          Paste the full CSV from Manus below. Make sure the first row includes:
+businessName, phone, website, city, county, state, zipCode, googleRating,
+reviewCount, serviceType, locationType, manusNotes, and status.
         </p>
 
         <textarea

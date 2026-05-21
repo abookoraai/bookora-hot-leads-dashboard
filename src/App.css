@@ -4,24 +4,10 @@
 
 body {
   margin: 0;
-  background: #f5f7fb;
-  color: #101828;
+  background: #0b1220;
+  color: #f9fafb;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-}
-
-.app.light {
-  --page-bg: #f5f7fb;
-  --card-bg: #ffffff;
-  --card-border: #eaecf0;
-  --text-main: #101828;
-  --text-muted: #667085;
-  --text-soft: #344054;
-  --input-bg: #ffffff;
-  --button-bg: #ffffff;
-  --button-text: #344054;
-  --business-name-color: #1f2937;
-  --shadow: rgba(16, 24, 40, 0.07);
 }
 
 .app.dark {
@@ -151,9 +137,14 @@ h1 {
 
 .controls {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   margin-bottom: 22px;
+}
+
+.controls .filterButtons,
+.controls .dangerActions {
+  grid-column: 1 / -1;
 }
 
 .controls input {
@@ -334,17 +325,6 @@ h1 {
 .callButton:hover {
   transform: translateY(-1px);
   box-shadow: 0 16px 34px rgba(37, 99, 235, 0.38);
-}
-
-.app.light .callButton {
-  background: #101828;
-  color: white;
-  border: 1px solid #101828;
-  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.14);
-}
-
-.app.light .callButton:hover {
-  box-shadow: 0 14px 30px rgba(16, 24, 40, 0.2);
 }
 
 .siteButton {
