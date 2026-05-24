@@ -410,6 +410,7 @@ export default function App() {
   const [showScript, setShowScript] = useState(false);
   const [showPasteCsv, setShowPasteCsv] = useState(false);
   const [pastedCsv, setPastedCsv] = useState("");
+  const [showMobileDetail, setShowMobileDetail] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("bookoraLeads", JSON.stringify(leads));
@@ -591,6 +592,91 @@ export default function App() {
     setRatingFilter("");
   }
 
+  function downloadTextFile(filename, text) {
+    const blob = new Blob([text], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = filename;
+    link.click();
+
+    URL.revokeObjectURL(url);
+  }
+
+  function exportLeadsCsv() {
+    const headers = [
+      "Business Name",
+      "Phone",
+      "Website",
+      "City",
+      "State",
+      "Google Rating",
+      "Review Count",
+      "MCTB Status",
+      "Lead Status",
+      "Last Contacted",
+      "Follow Up Date",
+      "Caller Notes",
+    ];
+
+    const rows = leads.map((lead) => [
+      lead.businessName,
+      lead.phone,
+      lead.website,
+      lead.city,
+      lead.state,
+      lead.googleRating,
+      lead.reviewCount,
+      lead.mctbStatus,
+      lead.status,
+      lead.lastContacted,
+      lead.followUpDate,
+      String(lead.callerNotes || "").replace(/\n/g, " "),
+    ]);
+
+    const csv = [headers, ...rows]
+      .map((row) =>
+        row
+          .map((cell) => `"${String(cell || "").replace(/"/g, '""')}"`)
+          .join(",")
+      )
+      .join("\n");
+
+    downloadTextFile("bookora-leads-export.csv", csv);
+  }
+
+  function saveDailyReport() {
+    const report = [
+      ["Metric", "Today", "Weekly"],
+      ["Calls", dailyStats.calls, weeklyStats.calls],
+      ["Decision Makers", dailyStats.decisionMakers, weeklyStats.decisionMakers],
+      ["Bookings", dailyStats.bookings, weeklyStats.bookings],
+      ["Follow Ups", dailyStats.followUps, weeklyStats.followUps],
+      ["Closes", dailyStats.closes, weeklyStats.closes],
+      ["Notes", dailyStats.notes, weeklyStats.notes],
+      [],
+      ["Lead Summary", ""],
+      ["Total Leads", summary.total],
+      ["No MCTB", summary.noMctb],
+      ["Has MCTB", summary.hasMctb],
+      ["Unknown", summary.unknown],
+      ["Needs Retest", summary.needsRetest],
+      ["Booked", summary.booked],
+      ["Closed", summary.closed],
+    ];
+
+    const csv = report
+      .map((row) =>
+        row
+          .map((cell) => `"${String(cell || "").replace(/"/g, '""')}"`)
+          .join(",")
+      )
+      .join("\n");
+
+    downloadTextFile("bookora-daily-report.csv", csv);
+  }
+
   const scoredLeads = useMemo(() => {
     return leads
       .map((lead) => {
@@ -690,6 +776,7 @@ export default function App() {
               onClick={() => {
                 setActiveView(item);
                 if (item === "Import CSV") setShowPasteCsv(true);
+                if (item === "Reports") saveDailyReport();
               }}
             >
               <span>{icon}</span>
@@ -705,7 +792,7 @@ export default function App() {
             <input type="file" accept=".csv" onChange={handleCsvUpload} />
           </label>
           <button onClick={resetToday}>↻ Reset Today</button>
-          <button className="saveButton" onClick={() => alert("Daily report saved in this dashboard.")}>
+          <button className="saveButton" onClick={saveDailyReport}>
             ⇩ Save Daily Report
           </button>
         </div>
@@ -799,6 +886,7 @@ export default function App() {
           </select>
 
           <button className="clearButton" onClick={clearFilters}>☄ Clear Filters</button>
+          <button className="clearButton exportButton" onClick={exportLeadsCsv}>⇩ Export CSV</button>
         </section>
 
         <section className="desktopTableCard">
@@ -868,7 +956,10 @@ export default function App() {
             <button
               key={lead.id}
               className="mobileLeadCard"
-              onClick={() => setSelectedLeadId(lead.id)}
+              onClick={() => {
+                setSelectedLeadId(lead.id);
+                setShowMobileDetail(true);
+              }}
             >
               <div>
                 <strong>{lead.businessName}</strong>
@@ -1021,6 +1112,7 @@ export default function App() {
             onClick={() => {
               setActiveView(item === "Import" ? "Import CSV" : item);
               if (item === "Import") setShowPasteCsv(true);
+              if (item === "Reports") saveDailyReport();
             }}
           >
             <span>{icon}</span>
@@ -1028,6 +1120,123 @@ export default function App() {
           </button>
         ))}
       </nav>
+
+
+      {showMobileDetail && selectedLead && (
+        <section className="mobileDetailScreen">
+          <div className="drawerHeader">
+            <button onClick={() => setShowMobileDetail(false)}>‹ Back</button>
+            <h3>Lead Details</h3>
+            <button onClick={() => setShowMobileDetail(false)}>✕</button>
+          </div>
+
+          <div className="detailCard">
+            <h2>{selectedLead.businessName}</h2>
+            <a href={`tel:${String(selectedLead.phone).replace(/\D/g, "")}`}>📞 {selectedLead.phone}</a>
+            <a href={selectedLead.website} target="_blank" rel="noreferrer">🌐 {String(selectedLead.website || "").replace("https://", "").replace("http://", "")}</a>
+            <p>📍 {selectedLead.city}, {selectedLead.state}</p>
+            <p className="ratingLine">{selectedLead.googleRating} <Stars rating={selectedLead.googleRating} /> <span>({selectedLead.reviewCount} reviews)</span></p>
+
+            <div className="detailSelectRow">
+              <label>MCTB Status</label>
+              <select
+                className={`selectTag ${getMctbClass(selectedLead.mctbStatus)}`}
+                value={selectedLead.mctbStatus || "Unknown"}
+                onChange={(event) => updateLead(selectedLead.id, "mctbStatus", event.target.value)}
+              >
+                {mctbOptions.map((status) => (
+                  <option key={status}>{status}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="detailSelectRow">
+              <label>Lead Status</label>
+              <select
+                className={`selectTag ${getStatusClass(selectedLead.status)}`}
+                value={selectedLead.status || "New"}
+                onChange={(event) => updateLead(selectedLead.id, "status", event.target.value)}
+              >
+                {statusOptions.map((status) => (
+                  <option key={status}>{status}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="drawerActionGrid">
+            <button onClick={() => trackAction(selectedLead.id, "Called")}>📞<span>Called</span></button>
+            <button onClick={() => trackAction(selectedLead.id, "Decision Maker")}>👤<span>Decision Maker</span></button>
+            <button onClick={() => trackAction(selectedLead.id, "Booked")}>📅<span>Booked</span></button>
+            <button onClick={() => trackAction(selectedLead.id, "Follow Up")}>⏰<span>Follow-Up</span></button>
+            <button onClick={() => trackAction(selectedLead.id, "Closed")}>🏆<span>Closed</span></button>
+            <button onClick={() => trackAction(selectedLead.id, "Skipped")}>⊗<span>Skip</span></button>
+          </div>
+
+          <div className="notesPanel">
+            <div className="notesHeader">
+              <h3>✎ NOTES</h3>
+              <span>Edit</span>
+            </div>
+            <textarea
+              value={selectedLead.callerNotes || ""}
+              onChange={(event) => updateCallerNotes(selectedLead.id, event.target.value)}
+              placeholder="Add call notes..."
+            />
+
+            <div className="infoRows">
+              <div><span>Last Contacted</span><strong>{selectedLead.lastContacted || "—"}</strong></div>
+              <div><span>Follow Up Date</span><strong>{formatFollowUpDate(selectedLead.followUpDate)}</strong></div>
+              <div><span>Source</span><strong>{selectedLead.source || "Google Maps"}</strong></div>
+            </div>
+
+            <label className="followDateLabel">
+              Set Follow-Up Date
+              <input
+                type="datetime-local"
+                value={selectedLead.followUpDate || ""}
+                onChange={(event) => updateLead(selectedLead.id, "followUpDate", event.target.value)}
+              />
+            </label>
+
+            <div className="drawerLinks">
+              {selectedLead.website ? (
+                <a href={selectedLead.website} target="_blank" rel="noreferrer">🌐 View Website</a>
+              ) : (
+                <span>No Website</span>
+              )}
+              <a href={`https://www.google.com/maps/search/${encodeURIComponent(`${selectedLead.businessName} ${selectedLead.city} ${selectedLead.state}`)}`} target="_blank" rel="noreferrer">
+                ➤ Directions
+              </a>
+            </div>
+          </div>
+
+          <div className="activityPanel">
+            <h3>ACTIVITY HISTORY</h3>
+            {(selectedLead.activityHistory || []).length ? (
+              selectedLead.activityHistory.map((activity) => (
+                <div key={activity.id} className="timelineItem">
+                  <div>{activity.action === "Called" ? "📞" : activity.action === "Booked" ? "📅" : activity.action === "Decision Maker" ? "👤" : "•"}</div>
+                  <section>
+                    <strong>{activity.action}</strong>
+                    <span>{activity.timestamp}</span>
+                    <p>{activity.note}</p>
+                  </section>
+                </div>
+              ))
+            ) : (
+              <p className="emptyTimeline">No activity yet.</p>
+            )}
+          </div>
+
+          <button className="removeButton" onClick={() => {
+            deleteLead(selectedLead.id);
+            setShowMobileDetail(false);
+          }}>
+            🗑 Remove from List
+          </button>
+        </section>
+      )}
 
       <button className="floatingAdd" onClick={() => setShowPasteCsv(true)}>+</button>
 

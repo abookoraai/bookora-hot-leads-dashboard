@@ -433,7 +433,7 @@ a {
 
 .searchRow {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr auto;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr auto auto;
   gap: 14px;
   padding: 0 18px 18px;
   border-left: 1px solid rgba(148, 163, 184, 0.18);
@@ -1245,5 +1245,49 @@ a {
 
   .filterPill span {
     padding: 1px 6px;
+  }
+}
+
+.mobileDetailScreen {
+  display: none;
+}
+
+.exportButton {
+  border-color: rgba(34, 197, 94, 0.28);
+  color: #bbf7d0;
+}
+
+@media (max-width: 980px) {
+  .mobileDetailScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: block;
+    overflow-y: auto;
+    padding: 16px 14px 92px;
+    background: linear-gradient(135deg, #06101d 0%, #071827 46%, #06101d 100%);
+  }
+
+  .mobileDetailScreen .drawerHeader {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: rgba(6, 14, 25, 0.96);
+    padding: 8px 0 14px;
+    margin-bottom: 10px;
+  }
+
+  .mobileDetailScreen .detailCard,
+  .mobileDetailScreen .notesPanel,
+  .mobileDetailScreen .activityPanel,
+  .mobileDetailScreen .drawerActionGrid,
+  .mobileDetailScreen .removeButton {
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .exportButton {
+    display: none;
   }
 }
