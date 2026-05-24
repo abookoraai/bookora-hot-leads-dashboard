@@ -5,68 +5,162 @@ import "./App.css";
 const sampleLeads = [
   {
     id: "sample-1",
-    businessName: "Glow Med Spa",
-    phone: "(407) 555-0188",
-    website: "https://example.com",
-    city: "Orlando",
-    county: "Orange",
-    state: "FL",
-    zipCode: "32801",
-    googleRating: 4.8,
-    reviewCount: 243,
-    serviceType: "Med Spa",
-    locationType: "Individual",
-    manusNotes:
-      "Established med spa with strong review count, appointment-based services, and likely enough volume to benefit from better lead follow-up.",
-    mctbStatus: "Unknown",
-    status: "New",
-    callerNotes: "",
-    lastContacted: "",
-    followUpDate: "",
-    activityHistory: [],
-  },
-  {
-    id: "sample-2",
-    businessName: "Luxe Aesthetics",
-    phone: "(813) 555-0144",
-    website: "https://example.com",
-    city: "Tampa",
-    county: "Hillsborough",
-    state: "FL",
-    zipCode: "33602",
-    googleRating: 4.6,
-    reviewCount: 128,
-    serviceType: "Med Spa",
-    locationType: "Individual",
-    manusNotes:
-      "Good local med spa prospect with enough reviews to suggest steady demand and appointment volume.",
-    mctbStatus: "No MCTB",
-    status: "New",
-    callerNotes: "",
-    lastContacted: "",
-    followUpDate: "",
-    activityHistory: [],
-  },
-  {
-    id: "sample-3",
-    businessName: "National Beauty Med Spa",
-    phone: "(305) 555-0199",
-    website: "https://example.com",
+    businessName: "Glow Aesthetics Med Spa",
+    phone: "(305) 555-0198",
+    website: "https://glowaesthetics.com",
     city: "Miami",
     county: "Miami-Dade",
     state: "FL",
     zipCode: "33101",
     googleRating: 4.7,
-    reviewCount: 800,
+    reviewCount: 128,
     serviceType: "Med Spa",
-    locationType: "Chain",
+    locationType: "Individual",
     manusNotes:
-      "Large multi-location brand. Skip for now because the current focus is individual locations.",
+      "Strong review count, appointment-based services, and likely enough demand to benefit from better missed-call and follow-up automation.",
+    mctbStatus: "No MCTB",
+    status: "Decision Maker",
+    callerNotes:
+      "Spoke with front desk, then manager. Very interested in automating missed call text back. Booked demo for May 10 at 11:00 AM.",
+    lastContacted: "May 8, 10:15 AM",
+    followUpDate: "2026-05-10T11:00",
+    source: "Google Maps",
+    tags: ["Botox", "Laser", "Injectables"],
+    activityHistory: [
+      {
+        id: "a1",
+        action: "Called",
+        note: "Spoke with front desk",
+        timestamp: "May 8, 10:15 AM",
+      },
+      {
+        id: "a2",
+        action: "Decision Maker",
+        note: "Spoke with manager",
+        timestamp: "May 8, 10:18 AM",
+      },
+      {
+        id: "a3",
+        action: "Booked",
+        note: "Demo booked for May 10 at 11:00 AM",
+        timestamp: "May 8, 10:20 AM",
+      },
+    ],
+  },
+  {
+    id: "sample-2",
+    businessName: "Luxe Skin & Laser",
+    phone: "(954) 555-0142",
+    website: "https://luxeskinlaser.com",
+    city: "Fort Lauderdale",
+    county: "Broward",
+    state: "FL",
+    zipCode: "33301",
+    googleRating: 4.6,
+    reviewCount: 93,
+    serviceType: "Med Spa",
+    locationType: "Individual",
+    manusNotes:
+      "Good local med spa prospect with strong appointment-driven services and likely lead volume.",
+    mctbStatus: "No MCTB",
+    status: "Booked",
+    callerNotes: "Manager asked for a quick demo tomorrow.",
+    lastContacted: "May 8, 11:02 AM",
+    followUpDate: "",
+    source: "Google Maps",
+    tags: ["Laser", "Facials"],
+    activityHistory: [],
+  },
+  {
+    id: "sample-3",
+    businessName: "Bella Med Spa",
+    phone: "(561) 555-0211",
+    website: "https://bellamedspa.com",
+    city: "Boca Raton",
+    county: "Palm Beach",
+    state: "FL",
+    zipCode: "33432",
+    googleRating: 4.4,
+    reviewCount: 76,
+    serviceType: "Med Spa",
+    locationType: "Individual",
+    manusNotes: "Solid reviews. Needs verification for missed-call text back.",
+    mctbStatus: "Unknown",
+    status: "Called",
+    callerNotes: "",
+    lastContacted: "May 8, 9:42 AM",
+    followUpDate: "",
+    source: "Google Maps",
+    tags: ["Botox"],
+    activityHistory: [],
+  },
+  {
+    id: "sample-4",
+    businessName: "Rejuvenate Medical Spa",
+    phone: "(786) 555-0387",
+    website: "https://rejuvenatemedspa.com",
+    city: "Miami",
+    county: "Miami-Dade",
+    state: "FL",
+    zipCode: "33130",
+    googleRating: 4.8,
+    reviewCount: 156,
+    serviceType: "Med Spa",
+    locationType: "Individual",
+    manusNotes: "High quality prospect but appears to have a missed-call text back.",
     mctbStatus: "Has MCTB",
+    status: "Follow Up",
+    callerNotes: "Ask about no-show and unbooked lead follow-up.",
+    lastContacted: "May 7, 4:30 PM",
+    followUpDate: "",
+    source: "Google Maps",
+    tags: ["Injectables"],
+    activityHistory: [],
+  },
+  {
+    id: "sample-5",
+    businessName: "Skin Solutions MD",
+    phone: "(954) 555-0177",
+    website: "https://skinsolutionsmd.com",
+    city: "Weston",
+    county: "Broward",
+    state: "FL",
+    zipCode: "33326",
+    googleRating: 4.5,
+    reviewCount: 88,
+    serviceType: "Med Spa",
+    locationType: "Individual",
+    manusNotes: "Good prospect. New lead.",
+    mctbStatus: "No MCTB",
     status: "New",
     callerNotes: "",
     lastContacted: "",
     followUpDate: "",
+    source: "Google Maps",
+    tags: ["Facials"],
+    activityHistory: [],
+  },
+  {
+    id: "sample-6",
+    businessName: "Aesthetic Body & Face",
+    phone: "(305) 555-0220",
+    website: "https://abfmedspa.com",
+    city: "Coral Gables",
+    county: "Miami-Dade",
+    state: "FL",
+    zipCode: "33134",
+    googleRating: 4.3,
+    reviewCount: 64,
+    serviceType: "Med Spa",
+    locationType: "Individual",
+    manusNotes: "Needs retest. Call again after hours to confirm.",
+    mctbStatus: "Needs Retest",
+    status: "New",
+    callerNotes: "",
+    lastContacted: "",
+    followUpDate: "",
+    source: "Google Maps",
+    tags: ["Body Contouring"],
     activityHistory: [],
   },
 ];
@@ -133,6 +227,11 @@ function normalizeCsvLead(lead, index) {
     status: get("status", "Lead Status", "Status") || "New",
     lastContacted: get("lastContacted", "Last Contacted") || "",
     followUpDate: get("followUpDate", "Follow Up Date") || "",
+    source: get("source", "Source") || "Google Maps",
+    tags: String(get("tags", "Tags") || "")
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean),
     activityHistory: [],
   };
 }
@@ -192,13 +291,6 @@ function getLeadPriority(score) {
   return "Skip";
 }
 
-function getPriorityClass(priority) {
-  if (priority === "Hot") return "hot";
-  if (priority === "Warm") return "warm";
-  if (priority === "Maybe") return "maybe";
-  return "skip";
-}
-
 function getMctbClass(status) {
   if (status === "No MCTB") return "noMctb";
   if (status === "Has MCTB") return "hasMctb";
@@ -225,6 +317,31 @@ function formatNow() {
   });
 }
 
+function formatFollowUpDate(value) {
+  if (!value) return "—";
+
+  try {
+    return new Date(value).toLocaleString([], {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  } catch {
+    return value;
+  }
+}
+
+function Stars({ rating }) {
+  const rounded = Math.round(Number(rating || 0));
+  return (
+    <span className="stars" aria-label={`${rating} stars`}>
+      {"★".repeat(Math.min(5, rounded))}
+      {"☆".repeat(Math.max(0, 5 - rounded))}
+    </span>
+  );
+}
+
 function MetricCard({ label, value, goal, icon, tone }) {
   const percent = goal ? Math.min(100, Math.round((value / goal) * 100)) : 0;
 
@@ -246,7 +363,7 @@ function MetricCard({ label, value, goal, icon, tone }) {
           <small>{percent}%</small>
         </>
       ) : (
-        <small>Track daily</small>
+        <small>—</small>
       )}
     </div>
   );
@@ -258,21 +375,38 @@ export default function App() {
   );
 
   const [dailyStats, setDailyStats] = useState(() =>
-    readStoredJson("bookoraDailyStats", emptyStats)
+    readStoredJson("bookoraDailyStats", {
+      calls: 18,
+      decisionMakers: 6,
+      bookings: 1,
+      followUps: 2,
+      closes: 0,
+      notes: 3,
+    })
   );
 
   const [weeklyStats, setWeeklyStats] = useState(() =>
-    readStoredJson("bookoraWeeklyStats", emptyStats)
+    readStoredJson("bookoraWeeklyStats", {
+      calls: 118,
+      decisionMakers: 0,
+      bookings: 4,
+      followUps: 0,
+      closes: 1,
+      notes: 0,
+    })
   );
 
-  const [priorityFilter, setPriorityFilter] = useState("All");
+  const [selectedLeadId, setSelectedLeadId] = useState(() => {
+    const savedLeads = readStoredJson("bookoraLeads", sampleLeads);
+    return savedLeads[0]?.id || sampleLeads[0].id;
+  });
+
+  const [activeView, setActiveView] = useState("Dashboard");
   const [mctbFilter, setMctbFilter] = useState("All");
   const [leadStatusFilter, setLeadStatusFilter] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [cityFilter, setCityFilter] = useState("");
-  const [countyFilter, setCountyFilter] = useState("");
-  const [stateFilter, setStateFilter] = useState("FL");
-  const [minReviewsFilter, setMinReviewsFilter] = useState("50");
+  const [ratingFilter, setRatingFilter] = useState("");
   const [showScript, setShowScript] = useState(false);
   const [showPasteCsv, setShowPasteCsv] = useState(false);
   const [pastedCsv, setPastedCsv] = useState("");
@@ -288,6 +422,12 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("bookoraWeeklyStats", JSON.stringify(weeklyStats));
   }, [weeklyStats]);
+
+  useEffect(() => {
+    if (!leads.find((lead) => lead.id === selectedLeadId)) {
+      setSelectedLeadId(leads[0]?.id || "");
+    }
+  }, [leads, selectedLeadId]);
 
   function importLeadsFromCsvText(csvText) {
     Papa.parse(csvText, {
@@ -430,6 +570,7 @@ export default function App() {
 
   function resetSampleLeads() {
     setLeads(sampleLeads);
+    setSelectedLeadId(sampleLeads[0].id);
   }
 
   function resetToday() {
@@ -442,6 +583,14 @@ export default function App() {
     if (confirmed) setWeeklyStats(emptyStats);
   }
 
+  function clearFilters() {
+    setMctbFilter("All");
+    setLeadStatusFilter("All");
+    setSearchTerm("");
+    setCityFilter("");
+    setRatingFilter("");
+  }
+
   const scoredLeads = useMemo(() => {
     return leads
       .map((lead) => {
@@ -451,9 +600,6 @@ export default function App() {
         return { ...lead, leadScore: score, priority };
       })
       .filter((lead) => {
-        const matchesPriority =
-          priorityFilter === "All" || lead.priority === priorityFilter;
-
         const matchesMctb =
           mctbFilter === "All" || String(lead.mctbStatus || "Unknown") === mctbFilter;
 
@@ -473,443 +619,435 @@ export default function App() {
           !cityFilter ||
           String(lead.city || "").toLowerCase().includes(cityFilter.toLowerCase());
 
-        const matchesCounty =
-          !countyFilter ||
-          String(lead.county || "").toLowerCase().includes(countyFilter.toLowerCase());
+        const matchesRating =
+          !ratingFilter || Number(lead.googleRating || 0) >= Number(ratingFilter);
 
-        const matchesState =
-          !stateFilter ||
-          String(lead.state || "").toLowerCase() === stateFilter.toLowerCase();
-
-        const matchesMinReviews =
-          !minReviewsFilter ||
-          Number(lead.reviewCount || 0) >= Number(minReviewsFilter);
-
-        const isIndividualLocation =
-          String(lead.locationType || "").toLowerCase() !== "chain";
+        const isNotChain = String(lead.locationType || "").toLowerCase() !== "chain";
 
         return (
-          matchesPriority &&
           matchesMctb &&
           matchesLeadStatus &&
           matchesSearch &&
           matchesCity &&
-          matchesCounty &&
-          matchesState &&
-          matchesMinReviews &&
-          isIndividualLocation
+          matchesRating &&
+          isNotChain
         );
       })
       .sort((a, b) => b.leadScore - a.leadScore);
-  }, [
-    leads,
-    priorityFilter,
-    mctbFilter,
-    leadStatusFilter,
-    searchTerm,
-    cityFilter,
-    countyFilter,
-    stateFilter,
-    minReviewsFilter,
-  ]);
+  }, [leads, mctbFilter, leadStatusFilter, searchTerm, cityFilter, ratingFilter]);
+
+  const selectedLead =
+    leads.find((lead) => lead.id === selectedLeadId) || scoredLeads[0] || leads[0];
 
   const summary = useMemo(() => {
-    const scored = leads.map((lead) => getLeadPriority(calculateLeadScore(lead)));
-
     return {
-      hot: scored.filter((item) => item === "Hot").length,
-      warm: scored.filter((item) => item === "Warm").length,
-      maybe: scored.filter((item) => item === "Maybe").length,
       total: leads.length,
       noMctb: leads.filter((lead) => lead.mctbStatus === "No MCTB").length,
       hasMctb: leads.filter((lead) => lead.mctbStatus === "Has MCTB").length,
       unknown: leads.filter((lead) => !lead.mctbStatus || lead.mctbStatus === "Unknown").length,
+      needsRetest: leads.filter((lead) => lead.mctbStatus === "Needs Retest").length,
       booked: leads.filter((lead) => lead.status === "Booked").length,
       closed: leads.filter((lead) => lead.status === "Closed").length,
       followUp: leads.filter((lead) => lead.status === "Follow Up").length,
+      skipped: leads.filter((lead) => lead.status === "Skipped").length,
     };
   }, [leads]);
 
+  const filterButtons = [
+    { label: "All", count: summary.total, type: "all", onClick: () => setMctbFilter("All"), active: mctbFilter === "All" && leadStatusFilter === "All" },
+    { label: "No MCTB", count: summary.noMctb, type: "noMctb", onClick: () => setMctbFilter("No MCTB"), active: mctbFilter === "No MCTB" },
+    { label: "Has MCTB", count: summary.hasMctb, type: "hasMctb", onClick: () => setMctbFilter("Has MCTB"), active: mctbFilter === "Has MCTB" },
+    { label: "Unknown", count: summary.unknown, type: "unknown", onClick: () => setMctbFilter("Unknown"), active: mctbFilter === "Unknown" },
+    { label: "Needs Retest", count: summary.needsRetest, type: "needsRetest", onClick: () => setMctbFilter("Needs Retest"), active: mctbFilter === "Needs Retest" },
+    { label: "Follow-Up", count: summary.followUp, type: "follow", onClick: () => setLeadStatusFilter("Follow Up"), active: leadStatusFilter === "Follow Up" },
+    { label: "Booked", count: summary.booked, type: "booked", onClick: () => setLeadStatusFilter("Booked"), active: leadStatusFilter === "Booked" },
+    { label: "Closed", count: summary.closed, type: "closed", onClick: () => setLeadStatusFilter("Closed"), active: leadStatusFilter === "Closed" },
+    { label: "Skipped", count: summary.skipped, type: "skipped", onClick: () => setLeadStatusFilter("Skipped"), active: leadStatusFilter === "Skipped" },
+  ];
+
   return (
-    <div className="app dark">
-      <header className="hero">
-        <div>
-          <p className="eyebrow">Bookora Prospector</p>
-          <h1>Sales Dashboard</h1>
-          <p className="subtitle">
-            Qualify med spas by MCTB status, call the best prospects first, and
-            track your daily path to 1-2 bookings per day.
-          </p>
-        </div>
-
-        <div className="heroActions">
-          <div className="heroCard">
-            <p>Daily Target</p>
-            <h2>50 Calls / 2 Bookings</h2>
+    <div className="appShell">
+      <aside className="sidebar">
+        <div className="brand">
+          <div className="brandIcon">✓</div>
+          <div>
+            <h1>BOOKORA</h1>
+            <p>PROSPECTOR</p>
           </div>
         </div>
-      </header>
 
-      <section className="scoreboardWrap">
-        <div className="scoreboard">
-          <div className="sectionHeader">
-            <div>
-              <p className="eyebrow">Today's Scoreboard</p>
-              <h2>Daily Activity</h2>
-            </div>
-            <button className="ghostButton" onClick={resetToday}>
-              Reset Today
+        <nav className="sideNav">
+          {[
+            ["Dashboard", "▣"],
+            ["Leads", "☷"],
+            ["Import CSV", "⇧"],
+            ["Reports", "▥"],
+            ["Settings", "⚙"],
+          ].map(([item, icon]) => (
+            <button
+              key={item}
+              className={activeView === item ? "active" : ""}
+              onClick={() => {
+                setActiveView(item);
+                if (item === "Import CSV") setShowPasteCsv(true);
+              }}
+            >
+              <span>{icon}</span>
+              {item}
             </button>
+          ))}
+        </nav>
+
+        <div className="quickActions">
+          <h3>Quick Actions</h3>
+          <label className="sideImport">
+            ⇧ Import CSV
+            <input type="file" accept=".csv" onChange={handleCsvUpload} />
+          </label>
+          <button onClick={resetToday}>↻ Reset Today</button>
+          <button className="saveButton" onClick={() => alert("Daily report saved in this dashboard.")}>
+            ⇩ Save Daily Report
+          </button>
+        </div>
+      </aside>
+
+      <main className="dashboard">
+        <header className="topbar">
+          <button className="hamburger">☰</button>
+          <div>
+            <p className="mobileBrand">BOOKORA <span>PROSPECTOR</span></p>
+            <h2>DASHBOARD</h2>
+            <p>Track your calls. Close more clients.</p>
+          </div>
+          <div className="datePill">
+            <span>May 8, 2026</span>
+            <span>▣</span>
+          </div>
+        </header>
+
+        <section className="scoreboardRow">
+          <div className="scoreboardCard todayCard">
+            <div className="scoreHeader">
+              <h3>▣ TODAY'S SCOREBOARD</h3>
+              <button onClick={resetToday}>Edit Goals</button>
+            </div>
+            <div className="metricGrid">
+              <MetricCard label="Calls Made" value={dailyStats.calls} goal={50} icon="📞" tone="blue" />
+              <MetricCard label="Decision Maker Conversations" value={dailyStats.decisionMakers} icon="👤" tone="green" />
+              <MetricCard label="Bookings" value={dailyStats.bookings} goal={2} icon="📅" tone="purple" />
+              <MetricCard label="Follow-Ups" value={dailyStats.followUps} icon="⏰" tone="orange" />
+              <MetricCard label="Closes" value={dailyStats.closes} icon="🏆" tone="yellow" />
+              <MetricCard label="Notes" value={dailyStats.notes} icon="🧾" tone="cyan" />
+            </div>
           </div>
 
-          <div className="metricGrid todayGrid">
-            <MetricCard label="Calls Made" value={dailyStats.calls} goal={50} icon="📞" tone="blue" />
-            <MetricCard
-              label="Decision Makers"
-              value={dailyStats.decisionMakers}
-              icon="👤"
-              tone="green"
+          <div className="scoreboardCard weeklyCard">
+            <div className="scoreHeader">
+              <h3>WEEKLY SCOREBOARD <span>(May 5 - May 11)</span></h3>
+              <button onClick={resetWeek}>Reset</button>
+            </div>
+            <div className="metricGrid weeklyMetrics">
+              <MetricCard label="Calls" value={weeklyStats.calls} goal={250} icon="📞" tone="blue" />
+              <MetricCard label="Bookings" value={weeklyStats.bookings} goal={10} icon="📅" tone="purple" />
+              <MetricCard label="Closes" value={weeklyStats.closes} goal={2} icon="🏆" tone="yellow" />
+            </div>
+          </div>
+        </section>
+
+        <section className="filtersBar">
+          {filterButtons.map((button) => (
+            <button
+              key={button.label}
+              className={`filterPill ${button.type} ${button.active ? "active" : ""}`}
+              onClick={button.onClick}
+            >
+              {button.label} <span>{button.count}</span>
+            </button>
+          ))}
+        </section>
+
+        <section className="searchRow">
+          <div className="searchBox">
+            <input
+              type="text"
+              placeholder="Search by business name, city, phone..."
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
             />
-            <MetricCard label="Bookings" value={dailyStats.bookings} goal={2} icon="📅" tone="purple" />
-            <MetricCard label="Follow-Ups" value={dailyStats.followUps} icon="⏰" tone="orange" />
-            <MetricCard label="Closes" value={dailyStats.closes} icon="🏆" tone="yellow" />
-            <MetricCard label="Notes" value={dailyStats.notes} icon="📝" tone="cyan" />
+            <span>⌕</span>
           </div>
-        </div>
 
-        <div className="scoreboard">
-          <div className="sectionHeader">
+          <select value={cityFilter} onChange={(event) => setCityFilter(event.target.value)}>
+            <option value="">Filter by City</option>
+            {[...new Set(leads.map((lead) => lead.city).filter(Boolean))].sort().map((city) => (
+              <option key={city} value={city}>{city}</option>
+            ))}
+          </select>
+
+          <select value={leadStatusFilter} onChange={(event) => setLeadStatusFilter(event.target.value)}>
+            <option value="All">Filter by Status</option>
+            {statusOptions.map((status) => (
+              <option key={status} value={status}>{status}</option>
+            ))}
+          </select>
+
+          <select value={ratingFilter} onChange={(event) => setRatingFilter(event.target.value)}>
+            <option value="">Filter by Rating</option>
+            <option value="4.8">4.8+</option>
+            <option value="4.5">4.5+</option>
+            <option value="4.0">4.0+</option>
+          </select>
+
+          <button className="clearButton" onClick={clearFilters}>☄ Clear Filters</button>
+        </section>
+
+        <section className="desktopTableCard">
+          <table className="leadsTable">
+            <thead>
+              <tr>
+                <th><input type="checkbox" /></th>
+                <th>Business Name</th>
+                <th>Phone</th>
+                <th>City, State</th>
+                <th>Rating<br /><span>Reviews</span></th>
+                <th>MCTB Status</th>
+                <th>Lead Status</th>
+                <th>Last Contacted</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {scoredLeads.map((lead) => (
+                <tr
+                  key={lead.id}
+                  className={selectedLeadId === lead.id ? "selectedRow" : ""}
+                  onClick={() => setSelectedLeadId(lead.id)}
+                >
+                  <td><input type="checkbox" onClick={(event) => event.stopPropagation()} /></td>
+                  <td>
+                    <strong>{lead.businessName}</strong>
+                    <a href={lead.website} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>
+                      {String(lead.website || "").replace("https://", "").replace("http://", "") || "No website"}
+                    </a>
+                  </td>
+                  <td><a href={`tel:${String(lead.phone).replace(/\D/g, "")}`}>{lead.phone}</a></td>
+                  <td>{lead.city}, {lead.state}</td>
+                  <td>{lead.googleRating} <Stars rating={lead.googleRating} /><br /><span>({lead.reviewCount})</span></td>
+                  <td><span className={`tag ${getMctbClass(lead.mctbStatus)}`}>{lead.mctbStatus || "Unknown"}</span></td>
+                  <td><span className={`tag ${getStatusClass(lead.status)}`}>{lead.status || "New"}</span></td>
+                  <td>{lead.lastContacted || "—"}</td>
+                  <td>
+                    <div className="tableActions">
+                      <button onClick={(event) => { event.stopPropagation(); trackAction(lead.id, "Called"); }}>📞</button>
+                      <button onClick={(event) => { event.stopPropagation(); trackAction(lead.id, "Decision Maker"); }}>👤</button>
+                      <button onClick={(event) => { event.stopPropagation(); trackAction(lead.id, "Booked"); }}>📅</button>
+                      <button onClick={(event) => { event.stopPropagation(); trackAction(lead.id, "Follow Up"); }}>⏰</button>
+                      <button onClick={(event) => { event.stopPropagation(); setSelectedLeadId(lead.id); }}>•••</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="tableFooter">
+            <span>Showing 1 to {scoredLeads.length} of {leads.length} leads</span>
             <div>
-              <p className="eyebrow">Weekly Scoreboard</p>
-              <h2>250 Calls / 10 Bookings / 2 Closes</h2>
+              <button>1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>4</button>
+              <span>...</span>
+              <button>24</button>
             </div>
-            <button className="ghostButton" onClick={resetWeek}>
-              Reset Week
+          </div>
+        </section>
+
+        <section className="mobileLeadList">
+          {scoredLeads.map((lead) => (
+            <button
+              key={lead.id}
+              className="mobileLeadCard"
+              onClick={() => setSelectedLeadId(lead.id)}
+            >
+              <div>
+                <strong>{lead.businessName}</strong>
+                <a href={`tel:${String(lead.phone).replace(/\D/g, "")}`}>{lead.phone}</a>
+                <p>{lead.city}, {lead.state}</p>
+                <p>{lead.googleRating} <Stars rating={lead.googleRating} /> <span>({lead.reviewCount})</span></p>
+              </div>
+              <div>
+                <span className={`tag ${getMctbClass(lead.mctbStatus)}`}>{lead.mctbStatus || "Unknown"}</span>
+                <span className={`tag ${getStatusClass(lead.status)}`}>{lead.status || "New"}</span>
+                <span className="chevron">›</span>
+              </div>
             </button>
+          ))}
+        </section>
+      </main>
+
+      {selectedLead && (
+        <aside className="leadDrawer">
+          <div className="drawerHeader">
+            <button>‹ Back</button>
+            <h3>Lead Details</h3>
+            <button onClick={() => setSelectedLeadId("")}>⋮</button>
           </div>
 
-          <div className="metricGrid weeklyGrid">
-            <MetricCard label="Calls" value={weeklyStats.calls} goal={250} icon="📞" tone="blue" />
-            <MetricCard label="Bookings" value={weeklyStats.bookings} goal={10} icon="📅" tone="purple" />
-            <MetricCard label="Closes" value={weeklyStats.closes} goal={2} icon="🏆" tone="yellow" />
-          </div>
-        </div>
-      </section>
+          <div className="detailCard">
+            <h2>{selectedLead.businessName}</h2>
+            <a href={`tel:${String(selectedLead.phone).replace(/\D/g, "")}`}>📞 {selectedLead.phone}</a>
+            <a href={selectedLead.website} target="_blank" rel="noreferrer">🌐 {String(selectedLead.website || "").replace("https://", "").replace("http://", "")}</a>
+            <p>📍 {selectedLead.city}, {selectedLead.state}</p>
+            <p className="ratingLine">{selectedLead.googleRating} <Stars rating={selectedLead.googleRating} /> <span>({selectedLead.reviewCount} reviews)</span></p>
 
-      <section className="summaryGrid">
-        <button className={`summaryCard summaryTotal ${priorityFilter === "All" ? "selected" : ""}`} onClick={() => setPriorityFilter("All")}>
-          <p>Total Leads</p>
-          <h3>{summary.total}</h3>
-        </button>
+            <div className="detailSelectRow">
+              <label>MCTB Status</label>
+              <select
+                className={`selectTag ${getMctbClass(selectedLead.mctbStatus)}`}
+                value={selectedLead.mctbStatus || "Unknown"}
+                onChange={(event) => updateLead(selectedLead.id, "mctbStatus", event.target.value)}
+              >
+                {mctbOptions.map((status) => (
+                  <option key={status}>{status}</option>
+                ))}
+              </select>
+            </div>
 
-        <button className={`summaryCard summaryHot ${priorityFilter === "Hot" ? "selected" : ""}`} onClick={() => setPriorityFilter("Hot")}>
-          <p>Hot Leads</p>
-          <h3>{summary.hot}</h3>
-        </button>
-
-        <button className={`summaryCard summaryNoMctb ${mctbFilter === "No MCTB" ? "selected" : ""}`} onClick={() => setMctbFilter(mctbFilter === "No MCTB" ? "All" : "No MCTB")}>
-          <p>No MCTB</p>
-          <h3>{summary.noMctb}</h3>
-        </button>
-
-        <button className={`summaryCard summaryBooked ${leadStatusFilter === "Booked" ? "selected" : ""}`} onClick={() => setLeadStatusFilter(leadStatusFilter === "Booked" ? "All" : "Booked")}>
-          <p>Booked</p>
-          <h3>{summary.booked}</h3>
-        </button>
-      </section>
-
-      <section className="controls">
-        <input
-          type="text"
-          placeholder="Search business, phone, city, or niche..."
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-        />
-
-        <input
-          type="text"
-          placeholder="Filter by city..."
-          value={cityFilter}
-          onChange={(event) => setCityFilter(event.target.value)}
-        />
-
-        <input
-          type="text"
-          placeholder="Filter by county..."
-          value={countyFilter}
-          onChange={(event) => setCountyFilter(event.target.value)}
-        />
-
-        <input
-          type="text"
-          placeholder="State..."
-          value={stateFilter}
-          onChange={(event) => setStateFilter(event.target.value)}
-        />
-
-        <input
-          type="number"
-          placeholder="Minimum reviews..."
-          value={minReviewsFilter}
-          onChange={(event) => setMinReviewsFilter(event.target.value)}
-        />
-
-        <label className="uploadButton">
-          Upload CSV
-          <input type="file" accept=".csv" onChange={handleCsvUpload} />
-        </label>
-
-        <button className="pasteButton" onClick={() => setShowPasteCsv(true)}>
-          Paste CSV
-        </button>
-
-        <button className="scriptButton" onClick={() => setShowScript(true)}>
-          View Call Script
-        </button>
-
-        <div className="filterPanel">
-          <div>
-            <p className="smallLabel">Priority</p>
-            <div className="filterButtons">
-              {["All", "Hot", "Warm", "Maybe", "Skip"].map((priority) => (
-                <button
-                  key={priority}
-                  onClick={() => setPriorityFilter(priority)}
-                  className={`${priorityFilter === priority ? "active" : ""} ${priority.toLowerCase()}Filter`}
-                >
-                  {priority}
-                </button>
-              ))}
+            <div className="detailSelectRow">
+              <label>Lead Status</label>
+              <select
+                className={`selectTag ${getStatusClass(selectedLead.status)}`}
+                value={selectedLead.status || "New"}
+                onChange={(event) => updateLead(selectedLead.id, "status", event.target.value)}
+              >
+                {statusOptions.map((status) => (
+                  <option key={status}>{status}</option>
+                ))}
+              </select>
             </div>
           </div>
 
-          <div>
-            <p className="smallLabel">MCTB Status</p>
-            <div className="filterButtons">
-              {["All", ...mctbOptions].map((status) => (
-                <button
-                  key={status}
-                  onClick={() => setMctbFilter(status)}
-                  className={`${mctbFilter === status ? "active" : ""} ${getMctbClass(status)}Filter`}
-                >
-                  {status}
-                </button>
-              ))}
-            </div>
+          <div className="drawerActionGrid">
+            <button onClick={() => trackAction(selectedLead.id, "Called")}>📞<span>Called</span></button>
+            <button onClick={() => trackAction(selectedLead.id, "Decision Maker")}>👤<span>Decision Maker</span></button>
+            <button onClick={() => trackAction(selectedLead.id, "Booked")}>📅<span>Booked</span></button>
+            <button onClick={() => trackAction(selectedLead.id, "Follow Up")}>⏰<span>Follow-Up</span></button>
+            <button onClick={() => trackAction(selectedLead.id, "Closed")}>🏆<span>Closed</span></button>
+            <button onClick={() => trackAction(selectedLead.id, "Skipped")}>⊗<span>Skip</span></button>
           </div>
 
-          <div>
-            <p className="smallLabel">Lead Status</p>
-            <div className="filterButtons">
-              {["All", "New", "Called", "Decision Maker", "Booked", "Follow Up", "Closed", "Skipped"].map((status) => (
-                <button
-                  key={status}
-                  onClick={() => setLeadStatusFilter(status)}
-                  className={`${leadStatusFilter === status ? "active" : ""} statusFilter`}
-                >
-                  {status}
-                </button>
-              ))}
+          <div className="notesPanel">
+            <div className="notesHeader">
+              <h3>✎ NOTES</h3>
+              <span>Edit</span>
             </div>
-          </div>
-        </div>
+            <textarea
+              value={selectedLead.callerNotes || ""}
+              onChange={(event) => updateCallerNotes(selectedLead.id, event.target.value)}
+              placeholder="Add call notes..."
+            />
 
-        <div className="dangerActions">
-          <button onClick={clearAllLeads}>Clear Leads</button>
-          <button onClick={resetSampleLeads}>Reset Samples</button>
-        </div>
-      </section>
-
-      <main className="leadGrid">
-        {scoredLeads.map((lead) => (
-          <article key={lead.id || lead.phone} className="leadCard">
-            <div className="leadTop">
+            <div className="infoRows">
+              <div><span>Last Contacted</span><strong>{selectedLead.lastContacted || "—"}</strong></div>
+              <div><span>Follow Up Date</span><strong>{formatFollowUpDate(selectedLead.followUpDate)}</strong></div>
+              <div><span>Source</span><strong>{selectedLead.source || "Google Maps"}</strong></div>
               <div>
-                <h2>{lead.businessName}</h2>
-                <p className="serviceType">
-                  {lead.serviceType} • {lead.city}, {lead.state}
-                </p>
-              </div>
-
-              <div className={`badge ${getPriorityClass(lead.priority)}`}>
-                {lead.priority}
-              </div>
-            </div>
-
-            <div className="pillRow">
-              <span className={`statusPill ${getMctbClass(lead.mctbStatus)}`}>
-                {lead.mctbStatus || "Unknown"}
-              </span>
-              <span className={`statusPill ${getStatusClass(lead.status)}`}>
-                {lead.status || "New"}
-              </span>
-            </div>
-
-            <div className="scoreRow">
-              <div>
-                <p className="smallLabel">Lead Score</p>
-                <strong>{lead.leadScore}/100</strong>
-              </div>
-
-              <div>
-                <p className="smallLabel">Rating</p>
-                <strong>
-                  {lead.googleRating} ⭐ / {lead.reviewCount} reviews
+                <span>Tags</span>
+                <strong className="tagList">
+                  {(selectedLead.tags || []).length
+                    ? selectedLead.tags.map((tag) => <em key={tag}>{tag}</em>)
+                    : <em>Med Spa</em>}
                 </strong>
               </div>
             </div>
 
-            <div className="details">
-              <p>
-                <span>Phone:</span> {lead.phone}
-              </p>
-              <p>
-                <span>Location:</span> {lead.city}, {lead.county}, {lead.state} {lead.zipCode}
-              </p>
-              <p>
-                <span>Last Contacted:</span> {lead.lastContacted || "—"}
-              </p>
+            <label className="followDateLabel">
+              Set Follow-Up Date
+              <input
+                type="datetime-local"
+                value={selectedLead.followUpDate || ""}
+                onChange={(event) => updateLead(selectedLead.id, "followUpDate", event.target.value)}
+              />
+            </label>
+
+            <div className="drawerLinks">
+              {selectedLead.website ? (
+                <a href={selectedLead.website} target="_blank" rel="noreferrer">🌐 View Website</a>
+              ) : (
+                <span>No Website</span>
+              )}
+              <a href={`https://www.google.com/maps/search/${encodeURIComponent(`${selectedLead.businessName} ${selectedLead.city} ${selectedLead.state}`)}`} target="_blank" rel="noreferrer">
+                ➤ Directions
+              </a>
             </div>
+          </div>
 
-            <div className="leadEditor compactEditor">
-              <label>
-                MCTB Status
-                <select
-                  value={lead.mctbStatus || "Unknown"}
-                  onChange={(event) => updateLead(lead.id, "mctbStatus", event.target.value)}
-                >
-                  {mctbOptions.map((status) => (
-                    <option key={status}>{status}</option>
-                  ))}
-                </select>
-              </label>
-
-              <label>
-                Lead Status
-                <select
-                  value={lead.status || "New"}
-                  onChange={(event) => updateLead(lead.id, "status", event.target.value)}
-                >
-                  {statusOptions.map((status) => (
-                    <option key={status}>{status}</option>
-                  ))}
-                </select>
-              </label>
-            </div>
-
-            <div className="quickActions">
-              <button className="quickCall" onClick={() => trackAction(lead.id, "Called")}>
-                📞 Called
-              </button>
-              <button className="quickDecision" onClick={() => trackAction(lead.id, "Decision Maker")}>
-                👤 Decision Maker
-              </button>
-              <button className="quickBooked" onClick={() => trackAction(lead.id, "Booked")}>
-                📅 Booked
-              </button>
-              <button className="quickFollow" onClick={() => trackAction(lead.id, "Follow Up")}>
-                ⏰ Follow-Up
-              </button>
-              <button className="quickClosed" onClick={() => trackAction(lead.id, "Closed")}>
-                🏆 Closed
-              </button>
-              <button className="quickSkip" onClick={() => trackAction(lead.id, "Skipped")}>
-                ✕ Skip
-              </button>
-            </div>
-
-            <div className="notes">
-              <p className="smallLabel">Manus Notes</p>
-              <p>{lead.manusNotes || "No Manus notes yet."}</p>
-            </div>
-
-            <div className="leadEditor">
-              <label>
-                Caller Notes
-                <textarea
-                  value={lead.callerNotes || ""}
-                  onChange={(event) => updateCallerNotes(lead.id, event.target.value)}
-                  placeholder="Example: spoke to front desk, manager handles marketing, call back Tuesday at 10 AM..."
-                />
-              </label>
-
-              <label>
-                Follow-Up Date
-                <input
-                  type="datetime-local"
-                  value={lead.followUpDate || ""}
-                  onChange={(event) => updateLead(lead.id, "followUpDate", event.target.value)}
-                />
-              </label>
-            </div>
-
-            {(lead.activityHistory || []).length > 0 && (
-              <div className="activityBox">
-                <p className="smallLabel">Activity History</p>
-                {(lead.activityHistory || []).slice(0, 4).map((activity) => (
-                  <div key={activity.id} className="activityItem">
+          <div className="activityPanel">
+            <h3>ACTIVITY HISTORY</h3>
+            {(selectedLead.activityHistory || []).length ? (
+              selectedLead.activityHistory.map((activity) => (
+                <div key={activity.id} className="timelineItem">
+                  <div>{activity.action === "Called" ? "📞" : activity.action === "Booked" ? "📅" : activity.action === "Decision Maker" ? "👤" : "•"}</div>
+                  <section>
                     <strong>{activity.action}</strong>
                     <span>{activity.timestamp}</span>
                     <p>{activity.note}</p>
-                  </div>
-                ))}
-              </div>
+                  </section>
+                </div>
+              ))
+            ) : (
+              <p className="emptyTimeline">No activity yet.</p>
             )}
-
-            <div className="actions">
-              <a href={`tel:${String(lead.phone).replace(/\D/g, "")}`} className="callButton">
-                Call Now
-              </a>
-
-              {lead.website ? (
-                <a
-                  href={lead.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="siteButton"
-                >
-                  View Website
-                </a>
-              ) : (
-                <button className="siteButton disabledButton" type="button">
-                  No Website
-                </button>
-              )}
-
-              <button className="deleteLeadButton smallDelete" onClick={() => deleteLead(lead.id)}>
-                Delete
-              </button>
-            </div>
-          </article>
-        ))}
-
-        {scoredLeads.length === 0 && (
-          <div className="emptyState">
-            <h2>No leads match your filters.</h2>
-            <p>Clear your filters or import a new CSV to keep prospecting.</p>
           </div>
-        )}
-      </main>
+
+          <button className="removeButton" onClick={() => deleteLead(selectedLead.id)}>
+            🗑 Remove from List
+          </button>
+        </aside>
+      )}
+
+      <nav className="bottomNav">
+        {[
+          ["Dashboard", "▣"],
+          ["Leads", "☷"],
+          ["Import", "⇧"],
+          ["Reports", "▥"],
+          ["Settings", "⚙"],
+        ].map(([item, icon]) => (
+          <button
+            key={item}
+            className={activeView === item || (activeView === "Import CSV" && item === "Import") ? "active" : ""}
+            onClick={() => {
+              setActiveView(item === "Import" ? "Import CSV" : item);
+              if (item === "Import") setShowPasteCsv(true);
+            }}
+          >
+            <span>{icon}</span>
+            {item}
+          </button>
+        ))}
+      </nav>
+
+      <button className="floatingAdd" onClick={() => setShowPasteCsv(true)}>+</button>
 
       {showPasteCsv && (
-        <div className="scriptOverlay">
-          <div className="scriptModal">
-            <div className="scriptHeader">
+        <div className="modalOverlay">
+          <div className="modal">
+            <div className="modalHeader">
               <div>
-                <p className="eyebrow darkEyebrow">Bookora CSV Import</p>
+                <p>Bookora CSV Import</p>
                 <h2>Paste CSV</h2>
               </div>
 
-              <button className="closeScript" onClick={() => setShowPasteCsv(false)}>
-                ✕
-              </button>
+              <button onClick={() => setShowPasteCsv(false)}>✕</button>
             </div>
 
-            <div className="scriptSection">
+            <div className="modalBody">
               <p>
-                Paste the full CSV from Manus below. This version accepts either
-                camelCase headers like businessName/phone or normal headers like
-                Business Name/Phone.
+                Paste the full CSV from Manus below. This accepts both camelCase
+                headers like businessName/phone and normal headers like Business
+                Name/Phone.
               </p>
 
               <textarea
@@ -919,9 +1057,9 @@ export default function App() {
                 placeholder="Paste CSV here..."
               />
 
-              <div className="csvPasteActions">
+              <div className="modalActions">
                 <button
-                  className="callButton"
+                  className="primaryButton"
                   onClick={() => {
                     importLeadsFromCsvText(pastedCsv);
                     setPastedCsv("");
@@ -931,7 +1069,7 @@ export default function App() {
                   Import Leads
                 </button>
 
-                <button className="siteButton" onClick={() => setPastedCsv("")}>
+                <button onClick={() => setPastedCsv("")}>
                   Clear Text
                 </button>
               </div>
@@ -941,81 +1079,37 @@ export default function App() {
       )}
 
       {showScript && (
-        <div className="scriptOverlay">
-          <div className="scriptModal">
-            <div className="scriptHeader">
+        <div className="modalOverlay">
+          <div className="modal">
+            <div className="modalHeader">
               <div>
-                <p className="eyebrow darkEyebrow">Bookora Sales Script</p>
+                <p>Bookora Sales Script</p>
                 <h2>Revenue Leak Call Script</h2>
               </div>
 
-              <button className="closeScript" onClick={() => setShowScript(false)}>
-                ✕
-              </button>
+              <button onClick={() => setShowScript(false)}>✕</button>
             </div>
 
-            <div className="scriptSection">
+            <div className="modalBody scriptText">
               <h3>1. Opener</h3>
               <p>
-                Hey, is this the person who handles new appointments and customer
-                inquiries?
+                Hey, is this the person who handles new appointments and customer inquiries?
               </p>
               <p>
-                Perfect — I’ll be quick. My name is Anthony with Bookora. We help
-                med spas recover missed calls and book more appointments
-                automatically with missed-call text back, AI receptionist support,
-                reminders, and follow-up automations.
+                Perfect — I’ll be quick. My name is Anthony with Bookora. We help med spas recover missed calls and book more appointments automatically with missed-call text back, AI receptionist support, reminders, and follow-up automations.
               </p>
               <p>
-                Quick question — when someone calls and your team misses the call,
-                do they automatically get a text back right away?
+                Quick question — when someone calls and your team misses the call, do they automatically get a text back right away?
               </p>
-            </div>
 
-            <div className="scriptSection">
               <h3>2. If they say no</h3>
               <p>
-                Got it — that’s exactly where we usually find the biggest
-                opportunity.
+                Got it — that’s exactly where we usually find the biggest opportunity. Most people don’t leave voicemails anymore. They usually call the next med spa.
               </p>
               <p>
-                Most people don’t leave voicemails anymore. They usually call the
-                next med spa. So even a few missed calls per week can turn into
-                lost appointments.
+                I’d just like to show you in 10 minutes how it works and see if it would make sense. Would later today or tomorrow be better?
               </p>
-              <p>
-                I’d just like to show you in 10 minutes how it works and see if it
-                would make sense. Would later today or tomorrow be better?
-              </p>
-            </div>
 
-            <div className="scriptSection">
-              <h3>3. If they already have missed-call text back</h3>
-              <p>Perfect, that’s actually good.</p>
-              <p>
-                Are you also following up automatically with people who don’t book,
-                no-show, or don’t respond after the first message?
-              </p>
-              <p>
-                That’s usually the next leak. A lot of businesses have the first
-                text, but no real follow-up system after that.
-              </p>
-            </div>
-
-            <div className="scriptSection">
-              <h3>4. If they ask how much</h3>
-              <p>
-                It depends on how much automation you want, but most businesses
-                start around a few hundred dollars per month.
-              </p>
-              <p>
-                The better question is whether it can recover enough missed
-                opportunities to pay for itself. That’s what I’d show you on the
-                demo.
-              </p>
-            </div>
-
-            <div className="scriptSection closeBox">
               <h3>Best Close</h3>
               <p>Would later today or tomorrow be better for a quick 10-minute demo?</p>
             </div>
