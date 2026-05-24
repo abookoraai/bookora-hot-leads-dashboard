@@ -443,6 +443,7 @@ export default function App() {
   const [ratingFilter, setRatingFilter] = useState("");
   const [showScript, setShowScript] = useState(false);
   const [showPasteCsv, setShowPasteCsv] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [pastedCsv, setPastedCsv] = useState("");
   const [showMobileDetail, setShowMobileDetail] = useState(false);
 
@@ -989,7 +990,9 @@ export default function App() {
 
       <main className="dashboard">
         <header className="topbar">
-          <button className="hamburger">☰</button>
+          <button className="hamburger" onClick={() => setShowMobileMenu(true)}>
+  ☰
+</button>
           <div>
             <p className="mobileBrand"><img src={bookoraLogo} alt="" /> Bookora <span>Prospector</span></p>
             <h2>{activeView === "Leads" ? "LEADS" : activeView === "Reports" ? "REPORTS" : "DASHBOARD"}</h2>
@@ -1479,6 +1482,46 @@ export default function App() {
           </button>
         </aside>
       )}
+
+      {showMobileMenu && (
+  <div className="mobileMenuOverlay" onClick={() => setShowMobileMenu(false)}>
+    <div className="mobileMenu" onClick={(event) => event.stopPropagation()}>
+      <div className="mobileMenuHeader">
+        <div>
+          <h3>Bookora Prospector</h3>
+          <p>Menu</p>
+        </div>
+
+        <button onClick={() => setShowMobileMenu(false)}>✕</button>
+      </div>
+
+      {[
+        ["Dashboard", "▣"],
+        ["Leads", "☷"],
+        ["Import", "⇧"],
+        ["Reports", "▥"],
+        ["Settings", "⚙"],
+      ].map(([item, icon]) => (
+        <button
+          key={item}
+          className={
+            activeView === item || (activeView === "Import CSV" && item === "Import")
+              ? "active"
+              : ""
+          }
+          onClick={() => {
+            setActiveView(item === "Import" ? "Import CSV" : item);
+            if (item === "Import") setShowPasteCsv(true);
+            setShowMobileMenu(false);
+          }}
+        >
+          <span>{icon}</span>
+          {item}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
 
       <nav className="bottomNav">
         {[
