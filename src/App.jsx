@@ -342,11 +342,16 @@ function Stars({ rating }) {
   );
 }
 
-function MetricCard({ label, value, goal, icon, tone }) {
+function MetricCard({ label, value, goal, icon, tone, onClick, active }) {
   const percent = goal ? Math.min(100, Math.round((value / goal) * 100)) : 0;
+  const Tag = onClick ? "button" : "div";
 
   return (
-    <div className={`metricCard ${tone || ""}`}>
+    <Tag
+      className={`metricCard ${tone || ""} ${onClick ? "clickableMetric" : ""} ${active ? "activeMetric" : ""}`}
+      onClick={onClick}
+      type={onClick ? "button" : undefined}
+    >
       <div className="metricTop">
         <span>{icon}</span>
         <p>{label}</p>
@@ -365,7 +370,7 @@ function MetricCard({ label, value, goal, icon, tone }) {
       ) : (
         <small>—</small>
       )}
-    </div>
+    </Tag>
   );
 }
 
@@ -404,6 +409,7 @@ export default function App() {
   const [activeView, setActiveView] = useState("Dashboard");
   const [mctbFilter, setMctbFilter] = useState("All");
   const [leadStatusFilter, setLeadStatusFilter] = useState("All");
+  const [activityFilter, setActivityFilter] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [cityFilter, setCityFilter] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
@@ -587,9 +593,17 @@ export default function App() {
   function clearFilters() {
     setMctbFilter("All");
     setLeadStatusFilter("All");
+    setActivityFilter("All");
     setSearchTerm("");
     setCityFilter("");
     setRatingFilter("");
+  }
+
+  function showActivityLeads(type) {
+    setActivityFilter(type);
+    setMctbFilter("All");
+    setLeadStatusFilter("All");
+    setActiveView("Dashboard");
   }
 
   function downloadTextFile(filename, text) {
@@ -692,6 +706,24 @@ export default function App() {
         const matchesLeadStatus =
           leadStatusFilter === "All" || String(lead.status || "New") === leadStatusFilter;
 
+        const activityActions = (lead.activityHistory || []).map((activity) => activity.action);
+        const matchesActivity =
+          activityFilter === "All" ||
+          (activityFilter === "Called" &&
+            (String(lead.status || "") === "Called" ||
+              Boolean(lead.lastContacted) ||
+              activityActions.includes("Called"))) ||
+          (activityFilter === "Decision Maker" &&
+            (String(lead.status || "") === "Decision Maker" ||
+              activityActions.includes("Decision Maker"))) ||
+          (activityFilter === "Booked" &&
+            (String(lead.status || "") === "Booked" || activityActions.includes("Booked"))) ||
+          (activityFilter === "Follow Up" &&
+            (String(lead.status || "") === "Follow Up" || activityActions.includes("Follow Up"))) ||
+          (activityFilter === "Closed" &&
+            (String(lead.status || "") === "Closed" || activityActions.includes("Closed"))) ||
+          (activityFilter === "Notes" && Boolean(String(lead.callerNotes || "").trim()));
+
         const search = searchTerm.toLowerCase();
 
         const matchesSearch =
@@ -713,6 +745,7 @@ export default function App() {
         return (
           matchesMctb &&
           matchesLeadStatus &&
+          matchesActivity &&
           matchesSearch &&
           matchesCity &&
           matchesRating &&
@@ -720,7 +753,7 @@ export default function App() {
         );
       })
       .sort((a, b) => b.leadScore - a.leadScore);
-  }, [leads, mctbFilter, leadStatusFilter, searchTerm, cityFilter, ratingFilter]);
+  }, [leads, mctbFilter, leadStatusFilter, activityFilter, searchTerm, cityFilter, ratingFilter]);
 
   const selectedLead =
     leads.find((lead) => lead.id === selectedLeadId) || scoredLeads[0] || leads[0];
@@ -778,8 +811,9 @@ export default function App() {
       onClick: () => {
         setMctbFilter("All");
         setLeadStatusFilter("All");
+        setActivityFilter("All");
       },
-      active: mctbFilter === "All" && leadStatusFilter === "All",
+      active: mctbFilter === "All" && leadStatusFilter === "All" && activityFilter === "All",
     },
     {
       label: "No MCTB",
@@ -788,8 +822,9 @@ export default function App() {
       onClick: () => {
         setMctbFilter("No MCTB");
         setLeadStatusFilter("All");
+        setActivityFilter("All");
       },
-      active: mctbFilter === "No MCTB" && leadStatusFilter === "All",
+      active: mctbFilter === "No MCTB" && leadStatusFilter === "All" && activityFilter === "All",
     },
     {
       label: "Has MCTB",
@@ -798,8 +833,9 @@ export default function App() {
       onClick: () => {
         setMctbFilter("Has MCTB");
         setLeadStatusFilter("All");
+        setActivityFilter("All");
       },
-      active: mctbFilter === "Has MCTB" && leadStatusFilter === "All",
+      active: mctbFilter === "Has MCTB" && leadStatusFilter === "All" && activityFilter === "All",
     },
     {
       label: "Unknown",
@@ -808,8 +844,9 @@ export default function App() {
       onClick: () => {
         setMctbFilter("Unknown");
         setLeadStatusFilter("All");
+        setActivityFilter("All");
       },
-      active: mctbFilter === "Unknown" && leadStatusFilter === "All",
+      active: mctbFilter === "Unknown" && leadStatusFilter === "All" && activityFilter === "All",
     },
     {
       label: "Needs Retest",
@@ -818,8 +855,9 @@ export default function App() {
       onClick: () => {
         setMctbFilter("Needs Retest");
         setLeadStatusFilter("All");
+        setActivityFilter("All");
       },
-      active: mctbFilter === "Needs Retest" && leadStatusFilter === "All",
+      active: mctbFilter === "Needs Retest" && leadStatusFilter === "All" && activityFilter === "All",
     },
     {
       label: "Follow-Up",
@@ -828,8 +866,9 @@ export default function App() {
       onClick: () => {
         setLeadStatusFilter("Follow Up");
         setMctbFilter("All");
+        setActivityFilter("All");
       },
-      active: leadStatusFilter === "Follow Up" && mctbFilter === "All",
+      active: leadStatusFilter === "Follow Up" && mctbFilter === "All" && activityFilter === "All",
     },
     {
       label: "Booked",
@@ -838,8 +877,9 @@ export default function App() {
       onClick: () => {
         setLeadStatusFilter("Booked");
         setMctbFilter("All");
+        setActivityFilter("All");
       },
-      active: leadStatusFilter === "Booked" && mctbFilter === "All",
+      active: leadStatusFilter === "Booked" && mctbFilter === "All" && activityFilter === "All",
     },
     {
       label: "Closed",
@@ -848,8 +888,9 @@ export default function App() {
       onClick: () => {
         setLeadStatusFilter("Closed");
         setMctbFilter("All");
+        setActivityFilter("All");
       },
-      active: leadStatusFilter === "Closed" && mctbFilter === "All",
+      active: leadStatusFilter === "Closed" && mctbFilter === "All" && activityFilter === "All",
     },
     {
       label: "Skipped",
@@ -858,8 +899,9 @@ export default function App() {
       onClick: () => {
         setLeadStatusFilter("Skipped");
         setMctbFilter("All");
+        setActivityFilter("All");
       },
-      active: leadStatusFilter === "Skipped" && mctbFilter === "All",
+      active: leadStatusFilter === "Skipped" && mctbFilter === "All" && activityFilter === "All",
     },
   ];
 
@@ -930,12 +972,12 @@ export default function App() {
               <button onClick={resetToday}>Edit Goals</button>
             </div>
             <div className="metricGrid">
-              <MetricCard label="Calls Made" value={dailyStats.calls} goal={50} icon="📞" tone="blue" />
-              <MetricCard label="Decision Maker Conversations" value={dailyStats.decisionMakers} icon="👤" tone="green" />
-              <MetricCard label="Bookings" value={dailyStats.bookings} goal={2} icon="📅" tone="purple" />
-              <MetricCard label="Follow-Ups" value={dailyStats.followUps} icon="⏰" tone="orange" />
-              <MetricCard label="Closes" value={dailyStats.closes} icon="🏆" tone="yellow" />
-              <MetricCard label="Notes" value={dailyStats.notes} icon="🧾" tone="cyan" />
+              <MetricCard label="Calls Made" value={dailyStats.calls} goal={50} icon="📞" tone="blue" onClick={() => showActivityLeads("Called")} active={activityFilter === "Called"} />
+              <MetricCard label="Decision Maker Conversations" value={dailyStats.decisionMakers} icon="👤" tone="green" onClick={() => showActivityLeads("Decision Maker")} active={activityFilter === "Decision Maker"} />
+              <MetricCard label="Bookings" value={dailyStats.bookings} goal={2} icon="📅" tone="purple" onClick={() => showActivityLeads("Booked")} active={activityFilter === "Booked"} />
+              <MetricCard label="Follow-Ups" value={dailyStats.followUps} icon="⏰" tone="orange" onClick={() => showActivityLeads("Follow Up")} active={activityFilter === "Follow Up"} />
+              <MetricCard label="Closes" value={dailyStats.closes} icon="🏆" tone="yellow" onClick={() => showActivityLeads("Closed")} active={activityFilter === "Closed"} />
+              <MetricCard label="Notes" value={dailyStats.notes} icon="🧾" tone="cyan" onClick={() => showActivityLeads("Notes")} active={activityFilter === "Notes"} />
             </div>
           </div>
 
@@ -1101,6 +1143,13 @@ export default function App() {
               </div>
             </div>
           </section>
+        )}
+
+        {activeView !== "Reports" && activityFilter !== "All" && (
+          <div className="activeActivityNotice">
+            Showing leads for: <strong>{activityFilter}</strong>
+            <button onClick={() => setActivityFilter("All")}>Clear</button>
+          </div>
         )}
 
         {activeView !== "Reports" && (

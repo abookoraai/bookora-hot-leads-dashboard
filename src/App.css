@@ -1645,3 +1645,64 @@ a {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
   }
 }
+
+
+/* Make All only solid when selected */
+.filterPill.all {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #f8fafc;
+  border-color: rgba(148, 163, 184, 0.17);
+}
+
+.filterPill.all.active {
+  background: #0b74de !important;
+  color: #ffffff !important;
+}
+
+/* Clickable scoreboard filters */
+.metricCard.clickableMetric {
+  text-align: left;
+  cursor: pointer;
+}
+
+.metricCard.clickableMetric:hover {
+  border-color: rgba(56, 189, 248, 0.42);
+  transform: translateY(-1px);
+}
+
+.metricCard.activeMetric {
+  border-color: rgba(255, 255, 255, 0.55) !important;
+  background:
+    linear-gradient(180deg, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.58)),
+    rgba(15, 23, 42, 0.82) !important;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.32), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.activeActivityNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid rgba(56, 189, 248, 0.24);
+  background: rgba(14, 116, 144, 0.16);
+  color: #e0f2fe;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  font-weight: 800;
+}
+
+.activeActivityNotice button {
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(15, 23, 42, 0.72);
+  color: #f8fafc;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-weight: 900;
+}
+
+@media (max-width: 980px) {
+  .activeActivityNotice {
+    margin: 0 0 12px;
+  }
+}
