@@ -911,8 +911,8 @@ export default function App() {
         <div className="brand">
           <div className="brandIcon">✓</div>
           <div>
-            <h1>BOOKORA</h1>
-            <p>PROSPECTOR</p>
+            <h1>Bookora</h1>
+            <p>Prospector</p>
           </div>
         </div>
 
@@ -955,7 +955,7 @@ export default function App() {
         <header className="topbar">
           <button className="hamburger">☰</button>
           <div>
-            <p className="mobileBrand">BOOKORA <span>PROSPECTOR</span></p>
+            <p className="mobileBrand">Bookora <span>Prospector</span></p>
             <h2>DASHBOARD</h2>
             <p>Track your calls. Close more clients.</p>
           </div>
