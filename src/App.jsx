@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Papa from "papaparse";
 import "./App.css";
+import bookoraLogo from "./assets/bookora-prospector-logo.png";
 
 const sampleLeads = [
   {
@@ -433,6 +434,7 @@ export default function App() {
   });
 
   const [activeView, setActiveView] = useState("Dashboard");
+  const [themeMode, setThemeMode] = useState(() => localStorage.getItem("bookoraThemeMode") || "dark");
   const [mctbFilter, setMctbFilter] = useState("All");
   const [leadStatusFilter, setLeadStatusFilter] = useState("All");
   const [activityFilter, setActivityFilter] = useState("All");
@@ -455,6 +457,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("bookoraWeeklyStats", JSON.stringify(weeklyStats));
   }, [weeklyStats]);
+
+  useEffect(() => {
+    localStorage.setItem("bookoraThemeMode", themeMode);
+  }, [themeMode]);
 
   useEffect(() => {
     if (!leads.find((lead) => lead.id === selectedLeadId)) {
@@ -936,10 +942,10 @@ export default function App() {
   );
 
   return (
-    <div className="appShell">
+    <div className={`appShell ${themeMode === "light" ? "lightMode" : ""}`}>
       <aside className="sidebar">
         <div className="brand">
-          <div className="brandIcon">✓</div>
+          <img src={bookoraLogo} alt="Bookora Prospector logo" className="brandLogo" />
           <div>
             <h1>Bookora</h1>
             <p>Prospector</p>
@@ -985,7 +991,7 @@ export default function App() {
         <header className="topbar">
           <button className="hamburger">☰</button>
           <div>
-            <p className="mobileBrand">Bookora <span>Prospector</span></p>
+            <p className="mobileBrand"><img src={bookoraLogo} alt="" /> Bookora <span>Prospector</span></p>
             <h2>{activeView === "Leads" ? "LEADS" : activeView === "Reports" ? "REPORTS" : "DASHBOARD"}</h2>
             <p>{activeView === "Leads" ? "Search and filter your prospect list." : activeView === "Reports" ? "Review performance and next actions." : "Track your calls. Close more clients."}</p>
           </div>
@@ -995,7 +1001,7 @@ export default function App() {
           </div>
         </header>
 
-        {activeView !== "Leads" && (
+        {activeView !== "Leads" && activeView !== "Settings" && (
         <section className="scoreboardRow">
           <div className="scoreboardCard todayCard">
             <div className="scoreHeader">
@@ -1026,6 +1032,7 @@ export default function App() {
         </section>
         )}
 
+        {activeView !== "Settings" && activeView !== "Reports" && (
         <section className={`filtersBar ${activeView === "Leads" ? "leadsOnlyFilters" : ""}`}>
           {(activeView === "Leads" ? leadsTabFilterButtons : filterButtons).map((button) => (
             <button
@@ -1037,7 +1044,9 @@ export default function App() {
             </button>
           ))}
         </section>
+        )}
 
+        {activeView !== "Settings" && activeView !== "Reports" && (
         <section className={`searchRow ${activeView === "Leads" ? "leadsOnlySearch" : ""}`}>
           <div className="searchBox">
             <input
@@ -1073,6 +1082,80 @@ export default function App() {
           <button className="clearButton" onClick={clearFilters}>☄ Clear Filters</button>
           <button className="clearButton exportButton" onClick={exportLeadsCsv}>⇩ Export CSV</button>
         </section>
+        )}
+
+        {activeView === "Settings" && (
+          <section className="settingsPanel">
+            <div className="settingsHeader">
+              <div>
+                <p>Bookora Settings</p>
+                <h2>Dashboard Preferences</h2>
+              </div>
+              <span>Saved automatically</span>
+            </div>
+
+            <div className="settingsGrid">
+              <div className="settingsCard">
+                <h3>Appearance</h3>
+                <p>Switch between dark mode and light mode. Your choice will stay saved on this browser.</p>
+
+                <div className="themeToggleGroup">
+                  <button
+                    className={themeMode === "dark" ? "selected" : ""}
+                    onClick={() => setThemeMode("dark")}
+                  >
+                    🌙 Dark Mode
+                  </button>
+                  <button
+                    className={themeMode === "light" ? "selected" : ""}
+                    onClick={() => setThemeMode("light")}
+                  >
+                    ☀️ Light Mode
+                  </button>
+                </div>
+              </div>
+
+              <div className="settingsCard">
+                <h3>Current Sales Goals</h3>
+                <p>These are the operating targets this dashboard is built around.</p>
+
+                <div className="settingsGoalList">
+                  <div><span>Daily Calls</span><strong>50</strong></div>
+                  <div><span>Daily Bookings</span><strong>1-2</strong></div>
+                  <div><span>Weekly Calls</span><strong>250</strong></div>
+                  <div><span>Weekly Bookings</span><strong>5-10</strong></div>
+                  <div><span>Weekly Closes</span><strong>2</strong></div>
+                  <div><span>Monthly Closes</span><strong>8</strong></div>
+                </div>
+              </div>
+
+              <div className="settingsCard">
+                <h3>Data Controls</h3>
+                <p>Use these when you want to export your work, reset demo data, or clear the dashboard.</p>
+
+                <div className="settingsActions">
+                  <button onClick={exportLeadsCsv}>Export Leads CSV</button>
+                  <button onClick={saveDailyReport}>Download Report CSV</button>
+                  <button onClick={resetSampleLeads}>Reset Sample Leads</button>
+                  <button className="dangerSetting" onClick={clearAllLeads}>Clear All Leads</button>
+                </div>
+              </div>
+
+              <div className="settingsCard">
+                <h3>Recommended Workflow</h3>
+                <p>Use this dashboard in this order during your calling blocks.</p>
+
+                <ol className="workflowList">
+                  <li>Import enriched leads from Manus.</li>
+                  <li>Filter by No MCTB first.</li>
+                  <li>Call until you hit 50 attempts or 1-2 bookings.</li>
+                  <li>Use notes and follow-up dates on every real conversation.</li>
+                  <li>Check Reports at the end of the day.</li>
+                </ol>
+              </div>
+            </div>
+          </section>
+        )}
 
         {activeView === "Reports" && (
           <section className="reportsPanel">
@@ -1177,14 +1260,14 @@ export default function App() {
           </section>
         )}
 
-        {activeView !== "Reports" && activityFilter !== "All" && (
+        {activeView !== "Reports" && activeView !== "Settings" && activityFilter !== "All" && (
           <div className="activeActivityNotice">
             Showing leads for: <strong>{activityFilter}</strong>
             <button onClick={() => setActivityFilter("All")}>Clear</button>
           </div>
         )}
 
-        {activeView !== "Reports" && (
+        {activeView !== "Reports" && activeView !== "Settings" && (
           <section className="desktopTableCard">
             <table className="leadsTable">
             <thead>
@@ -1248,7 +1331,7 @@ export default function App() {
         </section>
         )}
 
-        {activeView !== "Reports" && (
+        {activeView !== "Reports" && activeView !== "Settings" && (
         <section className="mobileLeadList">
           {scoredLeads.map((lead) => (
             <button
