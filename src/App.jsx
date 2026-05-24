@@ -332,6 +332,30 @@ function formatFollowUpDate(value) {
   }
 }
 
+function getWeekRangeLabel(date = new Date()) {
+  const current = new Date(date);
+  const day = current.getDay();
+  const mondayOffset = day === 0 ? -6 : 1 - day;
+
+  const monday = new Date(current);
+  monday.setDate(current.getDate() + mondayOffset);
+
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+
+  const startMonth = monday.toLocaleDateString([], { month: "short" });
+  const endMonth = sunday.toLocaleDateString([], { month: "short" });
+  const startDay = monday.getDate();
+  const endDay = sunday.getDate();
+  const year = sunday.getFullYear();
+
+  if (startMonth === endMonth) {
+    return `${startMonth} ${startDay} - ${endDay}, ${year}`;
+  }
+
+  return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${year}`;
+}
+
 function Stars({ rating }) {
   const rounded = Math.round(Number(rating || 0));
   return (
@@ -400,6 +424,8 @@ export default function App() {
       notes: 0,
     })
   );
+
+  const weekRangeLabel = getWeekRangeLabel();
 
   const [selectedLeadId, setSelectedLeadId] = useState(() => {
     const savedLeads = readStoredJson("bookoraLeads", sampleLeads);
@@ -905,6 +931,10 @@ export default function App() {
     },
   ];
 
+  const leadsTabFilterButtons = filterButtons.filter((button) =>
+    ["All", "No MCTB", "Has MCTB", "Unknown", "Follow-Up", "Booked", "Closed", "Skipped"].includes(button.label)
+  );
+
   return (
     <div className="appShell">
       <aside className="sidebar">
@@ -956,8 +986,8 @@ export default function App() {
           <button className="hamburger">☰</button>
           <div>
             <p className="mobileBrand">Bookora <span>Prospector</span></p>
-            <h2>DASHBOARD</h2>
-            <p>Track your calls. Close more clients.</p>
+            <h2>{activeView === "Leads" ? "LEADS" : activeView === "Reports" ? "REPORTS" : "DASHBOARD"}</h2>
+            <p>{activeView === "Leads" ? "Search and filter your prospect list." : activeView === "Reports" ? "Review performance and next actions." : "Track your calls. Close more clients."}</p>
           </div>
           <div className="datePill">
             <span>May 8, 2026</span>
@@ -965,6 +995,7 @@ export default function App() {
           </div>
         </header>
 
+        {activeView !== "Leads" && (
         <section className="scoreboardRow">
           <div className="scoreboardCard todayCard">
             <div className="scoreHeader">
@@ -983,7 +1014,7 @@ export default function App() {
 
           <div className="scoreboardCard weeklyCard">
             <div className="scoreHeader">
-              <h3>WEEKLY SCOREBOARD <span>(May 5 - May 11)</span></h3>
+              <h3>WEEKLY SCOREBOARD <span>({weekRangeLabel})</span></h3>
               <button onClick={resetWeek}>Reset</button>
             </div>
             <div className="metricGrid weeklyMetrics">
@@ -993,9 +1024,10 @@ export default function App() {
             </div>
           </div>
         </section>
+        )}
 
-        <section className="filtersBar">
-          {filterButtons.map((button) => (
+        <section className={`filtersBar ${activeView === "Leads" ? "leadsOnlyFilters" : ""}`}>
+          {(activeView === "Leads" ? leadsTabFilterButtons : filterButtons).map((button) => (
             <button
               key={button.label}
               className={`filterPill ${button.type} ${button.active ? "active" : ""}`}
@@ -1006,7 +1038,7 @@ export default function App() {
           ))}
         </section>
 
-        <section className="searchRow">
+        <section className={`searchRow ${activeView === "Leads" ? "leadsOnlySearch" : ""}`}>
           <div className="searchBox">
             <input
               type="text"
