@@ -357,6 +357,37 @@ function getWeekRangeLabel(date = new Date()) {
   return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${year}`;
 }
 
+function getDateKey(value = new Date()) {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+}
+
+function formatCalendarDate(value) {
+  if (!value) return "No date";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return date.toLocaleDateString([], {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function formatCalendarTime(value) {
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 function Stars({ rating }) {
   const rounded = Math.round(Number(rating || 0));
   return (
@@ -435,6 +466,7 @@ export default function App() {
 
   const [activeView, setActiveView] = useState("Dashboard");
   const [themeMode, setThemeMode] = useState(() => localStorage.getItem("bookoraThemeMode") || "dark");
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState(getDateKey());
   const [mctbFilter, setMctbFilter] = useState("All");
   const [leadStatusFilter, setLeadStatusFilter] = useState("All");
   const [activityFilter, setActivityFilter] = useState("All");
@@ -443,7 +475,6 @@ export default function App() {
   const [ratingFilter, setRatingFilter] = useState("");
   const [showScript, setShowScript] = useState(false);
   const [showPasteCsv, setShowPasteCsv] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [pastedCsv, setPastedCsv] = useState("");
   const [showMobileDetail, setShowMobileDetail] = useState(false);
 
@@ -805,6 +836,61 @@ export default function App() {
     };
   }, [leads]);
 
+  const followUpLeads = useMemo(() => {
+    return leads
+      .filter((lead) => Boolean(lead.followUpDate))
+      .sort((a, b) => new Date(a.followUpDate) - new Date(b.followUpDate));
+  }, [leads]);
+
+  const selectedDateFollowUps = useMemo(() => {
+    return followUpLeads.filter((lead) => getDateKey(lead.followUpDate) === selectedCalendarDate);
+  }, [followUpLeads, selectedCalendarDate]);
+
+  const todayCallList = useMemo(() => {
+    return leads
+      .map((lead) => ({
+        ...lead,
+        leadScore: calculateLeadScore(lead),
+      }))
+      .filter((lead) => {
+        const status = String(lead.status || "New");
+        return (
+          status !== "Closed" &&
+          status !== "Skipped" &&
+          status !== "Not Interested" &&
+          status !== "Bad Number"
+        );
+      })
+      .sort((a, b) => {
+        const aNoMctb = a.mctbStatus === "No MCTB" ? 1 : 0;
+        const bNoMctb = b.mctbStatus === "No MCTB" ? 1 : 0;
+
+        if (aNoMctb !== bNoMctb) return bNoMctb - aNoMctb;
+
+        const aFollowUpToday = getDateKey(a.followUpDate) === getDateKey() ? 1 : 0;
+        const bFollowUpToday = getDateKey(b.followUpDate) === getDateKey() ? 1 : 0;
+
+        if (aFollowUpToday !== bFollowUpToday) return bFollowUpToday - aFollowUpToday;
+
+        return b.leadScore - a.leadScore;
+      })
+      .slice(0, 50);
+  }, [leads]);
+
+  const upcomingFollowUpDates = useMemo(() => {
+    const dateMap = new Map();
+
+    followUpLeads.forEach((lead) => {
+      const key = getDateKey(lead.followUpDate);
+      if (!key) return;
+      dateMap.set(key, (dateMap.get(key) || 0) + 1);
+    });
+
+    return Array.from(dateMap.entries())
+      .sort(([a], [b]) => new Date(a) - new Date(b))
+      .slice(0, 14);
+  }, [followUpLeads]);
+
   const reportMetrics = useMemo(() => {
     const calls = Number(weeklyStats.calls || 0);
     const decisionMakers = Number(weeklyStats.decisionMakers || 0);
@@ -957,7 +1043,7 @@ export default function App() {
           {[
             ["Dashboard", "▣"],
             ["Leads", "☷"],
-            ["Import CSV", "⇧"],
+            ["Calendar", "▦"],
             ["Reports", "▥"],
             ["Settings", "⚙"],
           ].map(([item, icon]) => (
@@ -990,13 +1076,11 @@ export default function App() {
 
       <main className="dashboard">
         <header className="topbar">
-          <button className="hamburger" onClick={() => setShowMobileMenu(true)}>
-  ☰
-</button>
+          <button className="hamburger">☰</button>
           <div>
             <p className="mobileBrand"><img src={bookoraLogo} alt="" /> Bookora <span>Prospector</span></p>
-            <h2>{activeView === "Leads" ? "LEADS" : activeView === "Reports" ? "REPORTS" : "DASHBOARD"}</h2>
-            <p>{activeView === "Leads" ? "Search and filter your prospect list." : activeView === "Reports" ? "Review performance and next actions." : "Track your calls. Close more clients."}</p>
+            <h2>{activeView === "Leads" ? "LEADS" : activeView === "Calendar" ? "CALENDAR" : activeView === "Reports" ? "REPORTS" : activeView === "Settings" ? "SETTINGS" : "DASHBOARD"}</h2>
+            <p>{activeView === "Leads" ? "Search and filter your prospect list." : activeView === "Calendar" ? "Plan follow-ups and today's call list." : activeView === "Reports" ? "Review performance and next actions." : activeView === "Settings" ? "Manage dashboard preferences." : "Track your calls. Close more clients."}</p>
           </div>
           <div className="datePill">
             <span>May 8, 2026</span>
@@ -1004,7 +1088,7 @@ export default function App() {
           </div>
         </header>
 
-        {activeView !== "Leads" && activeView !== "Settings" && (
+        {activeView !== "Leads" && activeView !== "Calendar" && activeView !== "Settings" && (
         <section className="scoreboardRow">
           <div className="scoreboardCard todayCard">
             <div className="scoreHeader">
@@ -1035,7 +1119,7 @@ export default function App() {
         </section>
         )}
 
-        {activeView !== "Settings" && activeView !== "Reports" && (
+        {activeView !== "Settings" && activeView !== "Reports" && activeView !== "Calendar" && (
         <section className={`filtersBar ${activeView === "Leads" ? "leadsOnlyFilters" : ""}`}>
           {(activeView === "Leads" ? leadsTabFilterButtons : filterButtons).map((button) => (
             <button
@@ -1049,7 +1133,7 @@ export default function App() {
         </section>
         )}
 
-        {activeView !== "Settings" && activeView !== "Reports" && (
+        {activeView !== "Settings" && activeView !== "Reports" && activeView !== "Calendar" && (
         <section className={`searchRow ${activeView === "Leads" ? "leadsOnlySearch" : ""}`}>
           <div className="searchBox">
             <input
@@ -1085,6 +1169,128 @@ export default function App() {
           <button className="clearButton" onClick={clearFilters}>☄ Clear Filters</button>
           <button className="clearButton exportButton" onClick={exportLeadsCsv}>⇩ Export CSV</button>
         </section>
+        )}
+
+        {activeView === "Calendar" && (
+          <section className="calendarPanel">
+            <div className="calendarHeader">
+              <div>
+                <p>Bookora Calendar</p>
+                <h2>Follow-Ups & Today's 50 Calls</h2>
+              </div>
+
+              <input
+                type="date"
+                value={selectedCalendarDate}
+                onChange={(event) => setSelectedCalendarDate(event.target.value)}
+              />
+            </div>
+
+            <div className="calendarSummaryGrid">
+              <div>
+                <span>Selected Date</span>
+                <strong>{formatCalendarDate(selectedCalendarDate)}</strong>
+              </div>
+              <div>
+                <span>Follow-Ups</span>
+                <strong>{selectedDateFollowUps.length}</strong>
+              </div>
+              <div>
+                <span>Suggested Calls</span>
+                <strong>{todayCallList.length} / 50</strong>
+              </div>
+            </div>
+
+            <div className="calendarGrid">
+              <div className="calendarBox">
+                <div className="calendarBoxHeader">
+                  <h3>Follow-Ups</h3>
+                  <span>{formatCalendarDate(selectedCalendarDate)}</span>
+                </div>
+
+                {selectedDateFollowUps.length ? (
+                  selectedDateFollowUps.map((lead) => (
+                    <article key={lead.id} className="calendarLeadCard">
+                      <div>
+                        <h4>{lead.businessName}</h4>
+                        <p>{lead.city}, {lead.state}</p>
+                        <small>{formatCalendarTime(lead.followUpDate)}</small>
+                      </div>
+
+                      <div className="calendarLeadActions">
+                        <span className={`tag ${getMctbClass(lead.mctbStatus)}`}>{lead.mctbStatus || "Unknown"}</span>
+                        <a href={`tel:${String(lead.phone).replace(/\D/g, "")}`}>Call</a>
+                        <button onClick={() => {
+                          setSelectedLeadId(lead.id);
+                          setShowMobileDetail(true);
+                        }}>
+                          Details
+                        </button>
+                      </div>
+                    </article>
+                  ))
+                ) : (
+                  <div className="emptyCalendarState">
+                    <h4>No follow-ups scheduled for this date.</h4>
+                    <p>Open a lead, set a follow-up date, and it will show here.</p>
+                  </div>
+                )}
+
+                <div className="upcomingDates">
+                  <h4>Upcoming Follow-Up Dates</h4>
+                  {upcomingFollowUpDates.length ? (
+                    upcomingFollowUpDates.map(([date, count]) => (
+                      <button
+                        key={date}
+                        className={selectedCalendarDate === date ? "active" : ""}
+                        onClick={() => setSelectedCalendarDate(date)}
+                      >
+                        <span>{formatCalendarDate(date)}</span>
+                        <strong>{count}</strong>
+                      </button>
+                    ))
+                  ) : (
+                    <p>No scheduled follow-ups yet.</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="calendarBox">
+                <div className="calendarBoxHeader">
+                  <h3>Today's 50 Med Spas To Call</h3>
+                  <span>No MCTB leads first</span>
+                </div>
+
+                <div className="callList">
+                  {todayCallList.map((lead, index) => (
+                    <article key={lead.id} className="callListItem">
+                      <strong>{index + 1}</strong>
+
+                      <div>
+                        <h4>{lead.businessName}</h4>
+                        <p>{lead.city}, {lead.state} • {lead.googleRating} ⭐ • {lead.reviewCount} reviews</p>
+                        <div className="miniTagRow">
+                          <span className={`tag ${getMctbClass(lead.mctbStatus)}`}>{lead.mctbStatus || "Unknown"}</span>
+                          <span className={`tag ${getStatusClass(lead.status)}`}>{lead.status || "New"}</span>
+                        </div>
+                      </div>
+
+                      <div className="callListActions">
+                        <a href={`tel:${String(lead.phone).replace(/\D/g, "")}`} onClick={() => trackAction(lead.id, "Called")}>Call</a>
+                        <button onClick={() => trackAction(lead.id, "Called")}>Log</button>
+                        <button onClick={() => {
+                          setSelectedLeadId(lead.id);
+                          setShowMobileDetail(true);
+                        }}>
+                          Open
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
         )}
 
         {activeView === "Settings" && (
@@ -1263,14 +1469,14 @@ export default function App() {
           </section>
         )}
 
-        {activeView !== "Reports" && activeView !== "Settings" && activityFilter !== "All" && (
+        {activeView !== "Reports" && activeView !== "Settings" && activeView !== "Calendar" && activityFilter !== "All" && (
           <div className="activeActivityNotice">
             Showing leads for: <strong>{activityFilter}</strong>
             <button onClick={() => setActivityFilter("All")}>Clear</button>
           </div>
         )}
 
-        {activeView !== "Reports" && activeView !== "Settings" && (
+        {activeView !== "Reports" && activeView !== "Settings" && activeView !== "Calendar" && (
           <section className="desktopTableCard">
             <table className="leadsTable">
             <thead>
@@ -1334,7 +1540,7 @@ export default function App() {
         </section>
         )}
 
-        {activeView !== "Reports" && activeView !== "Settings" && (
+        {activeView !== "Reports" && activeView !== "Settings" && activeView !== "Calendar" && (
         <section className="mobileLeadList">
           {scoredLeads.map((lead) => (
             <button
@@ -1483,51 +1689,11 @@ export default function App() {
         </aside>
       )}
 
-      {showMobileMenu && (
-  <div className="mobileMenuOverlay" onClick={() => setShowMobileMenu(false)}>
-    <div className="mobileMenu" onClick={(event) => event.stopPropagation()}>
-      <div className="mobileMenuHeader">
-        <div>
-          <h3>Bookora Prospector</h3>
-          <p>Menu</p>
-        </div>
-
-        <button onClick={() => setShowMobileMenu(false)}>✕</button>
-      </div>
-
-      {[
-        ["Dashboard", "▣"],
-        ["Leads", "☷"],
-        ["Import", "⇧"],
-        ["Reports", "▥"],
-        ["Settings", "⚙"],
-      ].map(([item, icon]) => (
-        <button
-          key={item}
-          className={
-            activeView === item || (activeView === "Import CSV" && item === "Import")
-              ? "active"
-              : ""
-          }
-          onClick={() => {
-            setActiveView(item === "Import" ? "Import CSV" : item);
-            if (item === "Import") setShowPasteCsv(true);
-            setShowMobileMenu(false);
-          }}
-        >
-          <span>{icon}</span>
-          {item}
-        </button>
-      ))}
-    </div>
-  </div>
-)}
-
       <nav className="bottomNav">
         {[
           ["Dashboard", "▣"],
           ["Leads", "☷"],
-          ["Import", "⇧"],
+          ["Calendar", "▦"],
           ["Reports", "▥"],
           ["Settings", "⚙"],
         ].map(([item, icon]) => (
@@ -1535,8 +1701,7 @@ export default function App() {
             key={item}
             className={activeView === item || (activeView === "Import CSV" && item === "Import") ? "active" : ""}
             onClick={() => {
-              setActiveView(item === "Import" ? "Import CSV" : item);
-              if (item === "Import") setShowPasteCsv(true);
+              setActiveView(item);
             }}
           >
             <span>{icon}</span>
