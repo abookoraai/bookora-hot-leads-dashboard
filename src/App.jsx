@@ -476,6 +476,7 @@ export default function App() {
   const [showScript, setShowScript] = useState(false);
   const [showPasteCsv, setShowPasteCsv] = useState(false);
   const [pastedCsv, setPastedCsv] = useState("");
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showMobileDetail, setShowMobileDetail] = useState(false);
 
   useEffect(() => {
@@ -1076,7 +1077,7 @@ export default function App() {
 
       <main className="dashboard">
         <header className="topbar">
-          <button className="hamburger">☰</button>
+          <button className="hamburger" onClick={() => setShowMobileMenu(true)}>☰</button>
           <div>
             <p className="mobileBrand"><img src={bookoraLogo} alt="" /> Bookora <span>Prospector</span></p>
             <h2>{activeView === "Leads" ? "LEADS" : activeView === "Calendar" ? "CALENDAR" : activeView === "Reports" ? "REPORTS" : activeView === "Settings" ? "SETTINGS" : "DASHBOARD"}</h2>
@@ -1687,6 +1688,55 @@ export default function App() {
             🗑 Remove from List
           </button>
         </aside>
+      )}
+
+      {showMobileMenu && (
+        <div className="mobileMenuOverlay" onClick={() => setShowMobileMenu(false)}>
+          <div className="mobileMenu" onClick={(event) => event.stopPropagation()}>
+            <div className="mobileMenuHeader">
+              <div className="mobileMenuBrand">
+                <img src={bookoraLogo} alt="" />
+                <div>
+                  <h3>Bookora Prospector</h3>
+                  <p>Menu</p>
+                </div>
+              </div>
+
+              <button onClick={() => setShowMobileMenu(false)}>✕</button>
+            </div>
+
+            {[
+              ["Dashboard", "▣"],
+              ["Leads", "☷"],
+              ["Calendar", "▦"],
+              ["Reports", "▥"],
+              ["Settings", "⚙"],
+            ].map(([item, icon]) => (
+              <button
+                key={item}
+                className={activeView === item ? "active" : ""}
+                onClick={() => {
+                  setActiveView(item);
+                  setShowMobileMenu(false);
+                }}
+              >
+                <span>{icon}</span>
+                {item}
+              </button>
+            ))}
+
+            <button
+              className="mobileMenuImport"
+              onClick={() => {
+                setShowPasteCsv(true);
+                setShowMobileMenu(false);
+              }}
+            >
+              <span>＋</span>
+              Import CSV
+            </button>
+          </div>
+        </div>
       )}
 
       <nav className="bottomNav">
