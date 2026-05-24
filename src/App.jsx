@@ -616,16 +616,20 @@ export default function App() {
   }
 
   function updateCallerNotes(id, value) {
-    const currentLead = leads.find((lead) => lead.id === id);
-    const hadNoNotes = !String(currentLead?.callerNotes || "").trim();
-    const hasNotesNow = String(value || "").trim();
-
     updateLead(id, "callerNotes", value);
+  }
 
-    if (hadNoNotes && hasNotesNow) {
-      increaseStats("notes");
-      addLeadHistory(id, "Notes", "Caller notes added");
+  function saveCallerNote(id) {
+    const lead = leads.find((item) => item.id === id);
+    const note = String(lead?.callerNotes || "").trim();
+
+    if (!note) {
+      alert("Type a note before saving it to activity history.");
+      return;
     }
+
+    increaseStats("notes");
+    addLeadHistory(id, "Note Saved", note);
   }
 
   function deleteLead(id) {
@@ -1631,6 +1635,10 @@ export default function App() {
               placeholder="Add call notes..."
             />
 
+            <button className="saveNoteButton" onClick={() => saveCallerNote(selectedLead.id)}>
+              Save Note to Activity History
+            </button>
+
             <div className="infoRows">
               <div><span>Last Contacted</span><strong>{selectedLead.lastContacted || "—"}</strong></div>
               <div><span>Follow Up Date</span><strong>{formatFollowUpDate(selectedLead.followUpDate)}</strong></div>
@@ -1654,15 +1662,12 @@ export default function App() {
               />
             </label>
 
-            <div className="drawerLinks">
+            <div className="drawerLinks singleLink">
               {selectedLead.website ? (
                 <a href={selectedLead.website} target="_blank" rel="noreferrer">🌐 View Website</a>
               ) : (
                 <span>No Website</span>
               )}
-              <a href={`https://www.google.com/maps/search/${encodeURIComponent(`${selectedLead.businessName} ${selectedLead.city} ${selectedLead.state}`)}`} target="_blank" rel="noreferrer">
-                ➤ Directions
-              </a>
             </div>
           </div>
 
@@ -1823,6 +1828,10 @@ export default function App() {
               placeholder="Add call notes..."
             />
 
+            <button className="saveNoteButton" onClick={() => saveCallerNote(selectedLead.id)}>
+              Save Note to Activity History
+            </button>
+
             <div className="infoRows">
               <div><span>Last Contacted</span><strong>{selectedLead.lastContacted || "—"}</strong></div>
               <div><span>Follow Up Date</span><strong>{formatFollowUpDate(selectedLead.followUpDate)}</strong></div>
@@ -1838,15 +1847,12 @@ export default function App() {
               />
             </label>
 
-            <div className="drawerLinks">
+            <div className="drawerLinks singleLink">
               {selectedLead.website ? (
                 <a href={selectedLead.website} target="_blank" rel="noreferrer">🌐 View Website</a>
               ) : (
                 <span>No Website</span>
               )}
-              <a href={`https://www.google.com/maps/search/${encodeURIComponent(`${selectedLead.businessName} ${selectedLead.city} ${selectedLead.state}`)}`} target="_blank" rel="noreferrer">
-                ➤ Directions
-              </a>
             </div>
           </div>
 
