@@ -1291,3 +1291,357 @@ a {
     display: none;
   }
 }
+
+
+.reportsPanel {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 14px;
+  background: rgba(9, 18, 31, 0.72);
+  padding: 20px;
+}
+
+.reportsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.reportsHeader p {
+  margin: 0 0 6px;
+  color: #38bdf8;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.8rem;
+}
+
+.reportsHeader h2 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.reportActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.reportActions button {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.82);
+  color: #e2e8f0;
+  border-radius: 10px;
+  padding: 11px 13px;
+  font-weight: 900;
+}
+
+.reportActions button:first-child {
+  background: linear-gradient(135deg, #087be8, #075cc2);
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.reportGoalGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.reportGoalCard,
+.conversionGrid > div,
+.reportBox {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(15, 23, 42, 0.58);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.reportGoalCard span,
+.conversionGrid p {
+  color: #cbd5e1;
+  margin: 0 0 8px;
+  font-weight: 800;
+}
+
+.reportGoalCard strong,
+.conversionGrid strong {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.reportGoalCard small,
+.conversionGrid span {
+  color: #94a3b8;
+}
+
+.reportBar {
+  height: 10px;
+  background: rgba(100, 116, 139, 0.25);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.reportBar i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1da1ff, #22c55e);
+}
+
+.conversionGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.reportTwoColumn {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 14px;
+}
+
+.reportBox h3 {
+  margin: 0 0 10px;
+  color: #38bdf8;
+}
+
+.reportBox p {
+  margin: 0;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.reportLeadRow {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(2, 6, 23, 0.24);
+  color: #f8fafc;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  text-align: left;
+  margin-bottom: 8px;
+}
+
+.reportLeadRow:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+  background: rgba(14, 116, 144, 0.16);
+}
+
+.reportLeadRow strong,
+.reportLeadRow small {
+  display: block;
+}
+
+.reportLeadRow small {
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+.reportLeadRow em {
+  font-style: normal;
+  color: #22c55e;
+  font-weight: 900;
+}
+
+@media (max-width: 980px) {
+  .reportsPanel {
+    padding: 16px;
+  }
+
+  .reportsHeader {
+    display: grid;
+  }
+
+  .reportActions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .reportGoalGrid,
+  .conversionGrid,
+  .reportTwoColumn {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Web-friendly desktop refinements */
+@media (min-width: 981px) {
+  .appShell {
+    grid-template-columns: 210px minmax(740px, 1fr) minmax(320px, 360px);
+  }
+
+  .dashboard {
+    overflow-x: hidden;
+  }
+
+  .scoreboardRow,
+  .filtersBar,
+  .searchRow,
+  .desktopTableCard,
+  .reportsPanel {
+    max-width: 100%;
+  }
+
+  .desktopTableCard {
+    overflow-x: auto;
+  }
+
+  .leadsTable {
+    min-width: 1040px;
+  }
+
+  .leadDrawer {
+    min-width: 0;
+  }
+
+  .searchRow {
+    grid-template-columns: minmax(260px, 1.4fr) minmax(150px, 0.8fr) minmax(150px, 0.8fr) minmax(150px, 0.8fr) auto auto;
+  }
+}
+
+@media (min-width: 981px) and (max-width: 1450px) {
+  .appShell {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+
+  .leadDrawer {
+    display: none;
+  }
+
+  .scoreboardRow {
+    grid-template-columns: 1fr;
+  }
+
+  .scoreboardCard {
+    border-right: 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+  }
+
+  .scoreboardCard:last-child {
+    border-bottom: 0;
+  }
+
+  .metricGrid {
+    grid-template-columns: repeat(6, minmax(105px, 1fr));
+  }
+
+  .weeklyMetrics {
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
+  }
+}
+
+@media (min-width: 981px) and (max-width: 1180px) {
+  .metricGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .weeklyMetrics {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .searchRow {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .clearButton,
+  .exportButton {
+    min-height: 46px;
+  }
+}
+
+/* Solid selected filter states */
+.filterPill {
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+
+.filterPill.active {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.38), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.filterPill.active span {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.filterPill.all.active {
+  background: #0b74de !important;
+}
+
+.filterPill.noMctb.active {
+  background: #16a34a !important;
+  color: #ffffff !important;
+}
+
+.filterPill.hasMctb.active {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+.filterPill.unknown.active {
+  background: #475569 !important;
+  color: #ffffff !important;
+}
+
+.filterPill.needsRetest.active {
+  background: #f97316 !important;
+  color: #ffffff !important;
+}
+
+.filterPill.follow.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.filterPill.booked.active {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+}
+
+.filterPill.closed.active {
+  background: #16a34a !important;
+  color: #ffffff !important;
+}
+
+.filterPill.skipped.active {
+  background: #64748b !important;
+  color: #ffffff !important;
+}
+
+/* Make the web table easier to scan */
+.leadsTable tbody tr {
+  transition: background 0.14s ease;
+}
+
+.leadsTable th:nth-child(2),
+.leadsTable td:nth-child(2) {
+  width: 240px;
+}
+
+.leadsTable th:nth-child(9),
+.leadsTable td:nth-child(9) {
+  width: 210px;
+}
+
+.tableActions {
+  white-space: nowrap;
+}
+
+/* Keep mobile exactly in card mode */
+@media (max-width: 980px) {
+  .filterPill.active {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+  }
+}

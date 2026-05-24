@@ -771,15 +771,96 @@ export default function App() {
   }, [leads]);
 
   const filterButtons = [
-    { label: "All", count: summary.total, type: "all", onClick: () => setMctbFilter("All"), active: mctbFilter === "All" && leadStatusFilter === "All" },
-    { label: "No MCTB", count: summary.noMctb, type: "noMctb", onClick: () => setMctbFilter("No MCTB"), active: mctbFilter === "No MCTB" },
-    { label: "Has MCTB", count: summary.hasMctb, type: "hasMctb", onClick: () => setMctbFilter("Has MCTB"), active: mctbFilter === "Has MCTB" },
-    { label: "Unknown", count: summary.unknown, type: "unknown", onClick: () => setMctbFilter("Unknown"), active: mctbFilter === "Unknown" },
-    { label: "Needs Retest", count: summary.needsRetest, type: "needsRetest", onClick: () => setMctbFilter("Needs Retest"), active: mctbFilter === "Needs Retest" },
-    { label: "Follow-Up", count: summary.followUp, type: "follow", onClick: () => setLeadStatusFilter("Follow Up"), active: leadStatusFilter === "Follow Up" },
-    { label: "Booked", count: summary.booked, type: "booked", onClick: () => setLeadStatusFilter("Booked"), active: leadStatusFilter === "Booked" },
-    { label: "Closed", count: summary.closed, type: "closed", onClick: () => setLeadStatusFilter("Closed"), active: leadStatusFilter === "Closed" },
-    { label: "Skipped", count: summary.skipped, type: "skipped", onClick: () => setLeadStatusFilter("Skipped"), active: leadStatusFilter === "Skipped" },
+    {
+      label: "All",
+      count: summary.total,
+      type: "all",
+      onClick: () => {
+        setMctbFilter("All");
+        setLeadStatusFilter("All");
+      },
+      active: mctbFilter === "All" && leadStatusFilter === "All",
+    },
+    {
+      label: "No MCTB",
+      count: summary.noMctb,
+      type: "noMctb",
+      onClick: () => {
+        setMctbFilter("No MCTB");
+        setLeadStatusFilter("All");
+      },
+      active: mctbFilter === "No MCTB" && leadStatusFilter === "All",
+    },
+    {
+      label: "Has MCTB",
+      count: summary.hasMctb,
+      type: "hasMctb",
+      onClick: () => {
+        setMctbFilter("Has MCTB");
+        setLeadStatusFilter("All");
+      },
+      active: mctbFilter === "Has MCTB" && leadStatusFilter === "All",
+    },
+    {
+      label: "Unknown",
+      count: summary.unknown,
+      type: "unknown",
+      onClick: () => {
+        setMctbFilter("Unknown");
+        setLeadStatusFilter("All");
+      },
+      active: mctbFilter === "Unknown" && leadStatusFilter === "All",
+    },
+    {
+      label: "Needs Retest",
+      count: summary.needsRetest,
+      type: "needsRetest",
+      onClick: () => {
+        setMctbFilter("Needs Retest");
+        setLeadStatusFilter("All");
+      },
+      active: mctbFilter === "Needs Retest" && leadStatusFilter === "All",
+    },
+    {
+      label: "Follow-Up",
+      count: summary.followUp,
+      type: "follow",
+      onClick: () => {
+        setLeadStatusFilter("Follow Up");
+        setMctbFilter("All");
+      },
+      active: leadStatusFilter === "Follow Up" && mctbFilter === "All",
+    },
+    {
+      label: "Booked",
+      count: summary.booked,
+      type: "booked",
+      onClick: () => {
+        setLeadStatusFilter("Booked");
+        setMctbFilter("All");
+      },
+      active: leadStatusFilter === "Booked" && mctbFilter === "All",
+    },
+    {
+      label: "Closed",
+      count: summary.closed,
+      type: "closed",
+      onClick: () => {
+        setLeadStatusFilter("Closed");
+        setMctbFilter("All");
+      },
+      active: leadStatusFilter === "Closed" && mctbFilter === "All",
+    },
+    {
+      label: "Skipped",
+      count: summary.skipped,
+      type: "skipped",
+      onClick: () => {
+        setLeadStatusFilter("Skipped");
+        setMctbFilter("All");
+      },
+      active: leadStatusFilter === "Skipped" && mctbFilter === "All",
+    },
   ];
 
   return (
@@ -1073,7 +1154,7 @@ export default function App() {
           </table>
 
           <div className="tableFooter">
-            <span>Showing 1 to {scoredLeads.length} of {leads.length} leads</span>
+            <span>Showing {scoredLeads.length} of {leads.length} leads</span>
             <div>
               <button>1</button>
               <button>2</button>
