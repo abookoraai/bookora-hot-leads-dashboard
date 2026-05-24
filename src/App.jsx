@@ -739,6 +739,37 @@ export default function App() {
     };
   }, [leads]);
 
+  const reportMetrics = useMemo(() => {
+    const calls = Number(weeklyStats.calls || 0);
+    const decisionMakers = Number(weeklyStats.decisionMakers || 0);
+    const bookings = Number(weeklyStats.bookings || 0);
+    const closes = Number(weeklyStats.closes || 0);
+
+    return {
+      callProgress: Math.min(100, Math.round((calls / 250) * 100)),
+      bookingProgress: Math.min(100, Math.round((bookings / 10) * 100)),
+      closeProgress: Math.min(100, Math.round((closes / 2) * 100)),
+      callsToBooking: bookings ? Math.round(calls / bookings) : 0,
+      bookingToCloseRate: bookings ? Math.round((closes / bookings) * 100) : 0,
+      decisionMakerRate: calls ? Math.round((decisionMakers / calls) * 100) : 0,
+      closeRateFromCalls: calls ? ((closes / calls) * 100).toFixed(1) : "0.0",
+      remainingCalls: Math.max(0, 250 - calls),
+      remainingBookings: Math.max(0, 10 - bookings),
+      remainingCloses: Math.max(0, 2 - closes),
+    };
+  }, [weeklyStats]);
+
+  const hotNoMctbLeads = useMemo(() => {
+    return leads
+      .map((lead) => ({
+        ...lead,
+        leadScore: calculateLeadScore(lead),
+      }))
+      .filter((lead) => lead.mctbStatus === "No MCTB" && lead.status !== "Closed" && lead.status !== "Skipped")
+      .sort((a, b) => b.leadScore - a.leadScore)
+      .slice(0, 5);
+  }, [leads]);
+
   const filterButtons = [
     { label: "All", count: summary.total, type: "all", onClick: () => setMctbFilter("All"), active: mctbFilter === "All" && leadStatusFilter === "All" },
     { label: "No MCTB", count: summary.noMctb, type: "noMctb", onClick: () => setMctbFilter("No MCTB"), active: mctbFilter === "No MCTB" },
@@ -776,7 +807,6 @@ export default function App() {
               onClick={() => {
                 setActiveView(item);
                 if (item === "Import CSV") setShowPasteCsv(true);
-                if (item === "Reports") saveDailyReport();
               }}
             >
               <span>{icon}</span>
@@ -889,8 +919,112 @@ export default function App() {
           <button className="clearButton exportButton" onClick={exportLeadsCsv}>⇩ Export CSV</button>
         </section>
 
-        <section className="desktopTableCard">
-          <table className="leadsTable">
+        {activeView === "Reports" && (
+          <section className="reportsPanel">
+            <div className="reportsHeader">
+              <div>
+                <p>Bookora Performance Report</p>
+                <h2>This Week's Sales Scoreboard</h2>
+              </div>
+              <div className="reportActions">
+                <button onClick={saveDailyReport}>Download Report CSV</button>
+                <button onClick={exportLeadsCsv}>Export Leads CSV</button>
+              </div>
+            </div>
+
+            <div className="reportGoalGrid">
+              <div className="reportGoalCard">
+                <span>Weekly Calls</span>
+                <strong>{weeklyStats.calls} / 250</strong>
+                <div className="reportBar"><i style={{ width: `${reportMetrics.callProgress}%` }} /></div>
+                <small>{reportMetrics.remainingCalls} calls left</small>
+              </div>
+
+              <div className="reportGoalCard">
+                <span>Weekly Bookings</span>
+                <strong>{weeklyStats.bookings} / 10</strong>
+                <div className="reportBar"><i style={{ width: `${reportMetrics.bookingProgress}%` }} /></div>
+                <small>{reportMetrics.remainingBookings} bookings left</small>
+              </div>
+
+              <div className="reportGoalCard">
+                <span>Weekly Closes</span>
+                <strong>{weeklyStats.closes} / 2</strong>
+                <div className="reportBar"><i style={{ width: `${reportMetrics.closeProgress}%` }} /></div>
+                <small>{reportMetrics.remainingCloses} closes left</small>
+              </div>
+            </div>
+
+            <div className="conversionGrid">
+              <div>
+                <p>Calls per Booking</p>
+                <strong>{reportMetrics.callsToBooking || "—"}</strong>
+                <span>Target: 25-50 calls per booking</span>
+              </div>
+
+              <div>
+                <p>Booking-to-Close Rate</p>
+                <strong>{reportMetrics.bookingToCloseRate}%</strong>
+                <span>Target: 20-40%</span>
+              </div>
+
+              <div>
+                <p>Decision Maker Rate</p>
+                <strong>{reportMetrics.decisionMakerRate}%</strong>
+                <span>Higher means better targeting/script</span>
+              </div>
+
+              <div>
+                <p>Close Rate From Calls</p>
+                <strong>{reportMetrics.closeRateFromCalls}%</strong>
+                <span>Cold-call efficiency</span>
+              </div>
+            </div>
+
+            <div className="reportTwoColumn">
+              <div className="reportBox">
+                <h3>What To Focus On Next</h3>
+                {weeklyStats.calls < 250 ? (
+                  <p>You are still under the weekly call goal. Focus on getting the call volume up before changing the offer.</p>
+                ) : weeklyStats.bookings < 10 ? (
+                  <p>You hit call volume, but bookings are low. Tighten the opener and push harder for the 10-minute demo.</p>
+                ) : weeklyStats.closes < 2 ? (
+                  <p>You are booking enough demos, but closes are low. Improve demo structure, urgency, and offer clarity.</p>
+                ) : (
+                  <p>You are on pace. Keep calling, protect your follow-ups, and start thinking about scaling lead generation.</p>
+                )}
+              </div>
+
+              <div className="reportBox">
+                <h3>Top No-MCTB Leads To Call</h3>
+                {hotNoMctbLeads.length ? (
+                  hotNoMctbLeads.map((lead) => (
+                    <button
+                      key={lead.id}
+                      className="reportLeadRow"
+                      onClick={() => {
+                        setSelectedLeadId(lead.id);
+                        setActiveView("Dashboard");
+                      }}
+                    >
+                      <span>
+                        <strong>{lead.businessName}</strong>
+                        <small>{lead.city}, {lead.state} • {lead.googleRating} ⭐ • {lead.reviewCount} reviews</small>
+                      </span>
+                      <em>{lead.leadScore}/100</em>
+                    </button>
+                  ))
+                ) : (
+                  <p>No No-MCTB leads available. Import more leads or retest unknown leads.</p>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {activeView !== "Reports" && (
+          <section className="desktopTableCard">
+            <table className="leadsTable">
             <thead>
               <tr>
                 <th><input type="checkbox" /></th>
@@ -950,7 +1084,9 @@ export default function App() {
             </div>
           </div>
         </section>
+        )}
 
+        {activeView !== "Reports" && (
         <section className="mobileLeadList">
           {scoredLeads.map((lead) => (
             <button
@@ -975,6 +1111,7 @@ export default function App() {
             </button>
           ))}
         </section>
+        )}
       </main>
 
       {selectedLead && (
@@ -1112,7 +1249,6 @@ export default function App() {
             onClick={() => {
               setActiveView(item === "Import" ? "Import CSV" : item);
               if (item === "Import") setShowPasteCsv(true);
-              if (item === "Reports") saveDailyReport();
             }}
           >
             <span>{icon}</span>
