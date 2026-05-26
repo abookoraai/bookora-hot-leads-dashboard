@@ -209,30 +209,87 @@ function normalizeCsvLead(lead, index) {
     return "";
   };
 
+  const servicesOffered = get(
+    "services_offered",
+    "Services Offered",
+    "servicesOffered",
+    "serviceType",
+    "Service Type",
+    "Category"
+  );
+
+  const notes = get(
+    "notes",
+    "Notes",
+    "manusNotes",
+    "Manus Notes",
+    "enrichment_notes",
+    "Enrichment Notes"
+  );
+
   return {
     id: get("id", "ID") || `${Date.now()}-${index}`,
-    businessName: get("businessName", "Business Name", "business name", "name", "Name"),
-    phone: get("phone", "Phone", "Phone Number", "phoneNumber"),
+
+    businessName: get(
+      "business_name",
+      "Business Name",
+      "businessName",
+      "business name",
+      "name",
+      "Name"
+    ),
+
+    phone: get(
+      "phone",
+      "Phone",
+      "Phone Number",
+      "phoneNumber",
+      "phone_number"
+    ),
+
     website: get("website", "Website", "url", "URL"),
     city: get("city", "City"),
     county: get("county", "County"),
     state: get("state", "State") || "FL",
-    zipCode: get("zipCode", "Zip", "ZIP", "Zip Code"),
-    googleRating: get("googleRating", "Google Rating", "rating", "Rating") || "0",
-    reviewCount: get("reviewCount", "Review Count", "reviews", "Reviews") || "0",
-    serviceType: get("serviceType", "Service Type", "Category") || "Med Spa",
-    locationType: get("locationType", "Location Type") || "Individual",
-    manusNotes: get("manusNotes", "Manus Notes", "Notes", "notes"),
-    callerNotes: get("callerNotes", "Caller Notes") || "",
-    mctbStatus: get("mctbStatus", "MCTB Status") || "Unknown",
-    status: get("status", "Lead Status", "Status") || "New",
-    lastContacted: get("lastContacted", "Last Contacted") || "",
-    followUpDate: get("followUpDate", "Follow Up Date") || "",
+    zipCode: get("zipCode", "Zip", "ZIP", "Zip Code", "zip_code"),
+
+    googleRating:
+      get("google_rating", "googleRating", "Google Rating", "rating", "Rating") || "0",
+
+    reviewCount:
+      get(
+        "google_review_count",
+        "reviewCount",
+        "Review Count",
+        "reviews",
+        "Reviews"
+      ) || "0",
+
+    serviceType: servicesOffered || "Med Spa",
+    locationType: get("locationType", "Location Type", "location_type") || "Individual",
+
+    manusNotes: notes,
+    callerNotes: get("callerNotes", "Caller Notes", "caller_notes") || "",
+
+    mctbStatus:
+      get("mctb_status", "mctbStatus", "MCTB Status") || "Unknown",
+
+    status:
+      get("lead_status", "status", "Lead Status", "Status") || "New",
+
+    lastContacted:
+      get("last_contacted", "lastContacted", "Last Contacted") || "",
+
+    followUpDate:
+      get("follow_up_date", "followUpDate", "Follow Up Date") || "",
+
     source: get("source", "Source") || "Google Maps",
-    tags: String(get("tags", "Tags") || "")
+
+    tags: String(get("tags", "Tags", "services_offered", "Services Offered") || "")
       .split(",")
       .map((tag) => tag.trim())
       .filter(Boolean),
+
     activityHistory: [],
   };
 }
