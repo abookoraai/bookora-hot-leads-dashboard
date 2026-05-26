@@ -323,6 +323,14 @@ a {
   color: #24aaff;
 }
 
+.scoreboardRow .metricCard h3 {
+  color: #1da1ff !important;
+}
+
+.scoreboardRow .metricCard h3 span {
+  color: #94a3b8 !important;
+}
+
 .progressTrack {
   height: 8px;
   background: rgba(100, 116, 139, 0.27);
